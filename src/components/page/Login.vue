@@ -12,19 +12,20 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
-                <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
+    import {loginAjax} from "../api/api";
+
     export default {
         data: function(){
             return {
                 ruleForm: {
-                    username: '',
-                    password: ''
+                    username: 'yc',
+                    password: '123456'
                 },
                 rules: {
                     username: [
@@ -38,11 +39,18 @@
         },
         methods: {
             submitForm(formName) {
-                const self = this;
-                self.$refs[formName].validate((valid) => {
+                const that = this;
+                that.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',self.ruleForm.username);
-                        self.$router.push('/readme');
+                        loginAjax(that.ruleForm).then(res=>{
+                            if (res.errno==0){
+                                localStorage.setItem('ms_username',that.ruleForm.username);
+                                this.$message.success('登录成功');
+                                this.$router.push('/readme');
+                            } else{
+                                this.$message.error(res.errmsg)
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

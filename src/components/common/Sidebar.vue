@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
-            <template v-for="item in items">
+            <template v-for="item in itemss">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index">
                         <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+
     export default {
         data() {
             return {
@@ -77,13 +78,59 @@
                         index: 'drag',
                         title: '拖拽'
                     }
-                ]
+                ],
+                item1:[
+                    {
+                        icon: 'el-icon-menu',
+                        index: '4',
+                        title: 'item',
+                        subs: [
+                            {
+                                index: 'inform',
+                                title: 'inform'
+                            },
+                            {
+                                index: 'ying',
+                                title: 'ying'
+                            },
+                            {
+                                index: 'changlu',
+                                title: 'changlu'
+                            },
+                        ]
+
+                    }
+                ],
+                itemss:[],
+                value:''
             }
+        },
+        mounted(){
+            setInterval(res=>{
+                this.value = localStorage.getItem('value')
+            },0)
+
+        },
+        created(){
+            localStorage.setItem('value','广告信息发布系统')
         },
         computed:{
             onRoutes(){
                 return this.$route.path.replace('/','');
             }
+        },
+        watch:{
+            value(curVal,oldVal){
+                if (curVal=="广告信息发布系统") {
+                    this.itemss = this.items
+                    this.$router.push('/readme')
+                }else{
+                    this.itemss = this.item1
+                    this.$router.push('/readme')
+                }
+            }
+        },
+        methods:{
         }
     }
 </script>

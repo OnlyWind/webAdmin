@@ -48,12 +48,24 @@ export default new Router({
                 {
                     path: '/drag',
                     component: resolve => require(['../components/page/DragList.vue'], resolve)    // 拖拽列表组件
-                }
+                },
+                {
+                    path: '/inform',
+                    component: resolve => require(['../components/page/information.vue'], resolve)
+                },
+                {
+                    path: '/ying',
+                    component: resolve => require(['../components/page/ying.vue'], resolve)
+                },
+                {
+                    path: '/changlu',
+                    component: resolve => require(['../components/page/changlu.vue'], resolve)
+                },
             ]
         },
         {
             path: '/login',
             component: resolve => require(['../components/page/Login.vue'], resolve)
-        },
+        }
     ]
 })
