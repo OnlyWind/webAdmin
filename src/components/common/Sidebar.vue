@@ -28,7 +28,53 @@
                     {
                         icon: 'el-icon-setting',
                         index: 'readme',
-                        title: '自述'
+                        title: '首页'
+                    },
+                    {
+                        icon: 'el-icon-menu',
+                        index: '0',
+                        title: '设备管理',
+                        subs: [
+                            {
+                                index: 'device',
+                                title: '设备管理'
+                            },
+                            {
+                                index: 'resolution',
+                                title: '分辨率管理'
+                            },
+                            {
+                                index: 'boot',
+                                title: '开关机管理'
+                            },
+                            {
+                                index: 'class',
+                                title: '分类管理'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-menu',
+                        index: '1',
+                        title: '节目管理',
+                        subs: [
+                            {
+                                index: 'template',
+                                title: '模板管理'
+                            },
+                            {
+                                index: 'material',
+                                title: '素材管理'
+                            },
+                            {
+                                index: 'program',
+                                title: '节目管理'
+                            },
+                            {
+                                index: 'mission',
+                                title: '任务管理'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-menu',
@@ -68,16 +114,6 @@
                             }
                         ]
                     },
-                    {
-                        icon: 'el-icon-star-on',
-                        index: 'basecharts',
-                        title: '图表'
-                    },
-                    {
-                        icon: 'el-icon-upload2',
-                        index: 'drag',
-                        title: '拖拽'
-                    }
                 ],
                 item1:[
                     {
@@ -109,7 +145,6 @@
             setInterval(res=>{
                 this.value = localStorage.getItem('value')
             },0)
-
         },
         created(){
             localStorage.setItem('value','广告信息发布系统')

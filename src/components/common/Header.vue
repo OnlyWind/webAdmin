@@ -3,7 +3,7 @@
         <div class="logo">后台管理系统</div>
         <div class="header-router">
             <ul>
-                <li class="hearders active" @click="c1">广告信息发布系统</li>
+                <li class="hearders active" @click="c1">信发系统</li>
                 <li class="hearders" @click="c2">鹰智荟</li>
                 <li class="hearders" @click="c3">长鹿家园</li>
             </ul>
@@ -15,18 +15,45 @@
                     {{username}}
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="loginout">退出</el-dropdown-item>
+                    <el-dropdown-item command="loginout">注    销</el-dropdown-item>
+                    <el-dropdown-item command="updatapw">修改密码</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
+        <el-dialog title="修改密码" :visible.sync="dialogFormVisible" style="width: 70%;margin: 0 auto">
+            <el-form :model="forms" label-width="120px" style="margin-left: -50px;" :rules="setFormRules" ref="setPassword">
+                <el-form-item label="旧密码" prop='oldPassword'>
+                    <el-input v-model="forms.oldPassword" type="password" placeholder="请输入旧密码"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop='newPassword'>
+                    <el-input v-model="forms.newPassword" type="password" placeholder="请输入新密码"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="send">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
+    import {logoutAjax,setPasswordAjax} from '../api/api'
     export default {
         data() {
             return {
-                name: 'linxin',
+                dialogFormVisible:false,
+                name: '',
                 value:'',
+                forms:{
+                    oldPassword:'',
+                    newPassword:'',
+                    type:1,
+                    platformType:1
+                },
+                setFormRules:{
+                    oldPassword: [{required: true,message: '旧密码不能为空',trigger: 'blur'}],
+                    newPassword: [{required: true,message: '新密码不能为空',trigger: 'blur'}]
+                },
                 dom:document.getElementsByClassName('hearders')
             }
         },
@@ -39,9 +66,39 @@
         methods: {
             handleCommand(command) {
                 if (command == 'loginout') {
-                    localStorage.removeItem('ms_username')
-                    this.$router.push('/login');
+                    localStorage.removeItem('ms_username');
+                    logoutAjax().then(res=>{
+                       if(res.code == 0) {
+                           this.$message.success(res.message)
+                           this.$router.push('/')
+                           localStorage.removeItem('access_token')
+                       }else{
+                           this.$message.warning(res.message)
+                       }
+                    }).catch(res=>{
+                        if (res){
+                            this.$message.success('注销成功')
+                            this.$router.push('/')
+                            localStorage.removeItem('access_token')
+                        }
+                    });
+                }else if (command == 'updatapw') {
+                    this.dialogFormVisible = true
                 }
+            },
+            send(){
+                setPasswordAjax(this.forms).then(res=>{
+                    if (res.code == 0){
+                        this.$message.success(res.message)
+                        this.dialogFormVisible = false
+                    }else{
+                        this.$message.warning(res.message)
+                    }
+                }).catch(res=>{
+                    this.$message.error('登录超时，重新登录！')
+                    this.$router.push('/')
+                    localStorage.removeItem('access_token')
+                })
             },
             c1(){
                 for (var i = 0; i <this.dom.length ; i++) {

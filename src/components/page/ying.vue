@@ -30,7 +30,7 @@
                 :value="item.label">
             </el-option>
         </el-select>
-        <div style="width: 200px;height: 200px; margin: 10px auto;">
+        <div style="width: 160px;height: 90px; margin: 10px auto;">
             <img :src="src" id="img">
         </div>
     </div>
@@ -76,7 +76,7 @@
                     label:'1280x720'
                 },{
                     value:'3',
-                    label:'500x500'
+                    label:'640x360'
                 },],
                 value:'',
                 fArr:[]
@@ -105,20 +105,21 @@
 
             //选择分辨率
             Resolution(){
+                sessionStorage.removeItem('Idx')
                 this.flag = true;
                 this.$message.warning("修改分辨率会清空屏幕！")
                 //在选择分辨率的时候重置控件数组
                 this.dragArr = []
                 this.fArr = this.value.split("x")
-                if (this.fArr[0]<=500 || this.fArr[1]<=500){
+                if (this.fArr[0]<=640 || this.fArr[1]<=360){
                     this.$refs.test.style.width = this.fArr[0]+'px';
                     this.$refs.test.style.height = this.fArr[1]+'px'
                 }else if (this.fArr[0]<=1280 || this.fArr[1]<=720) {
-                    this.$refs.test.style.width = this.fArr[0]*0.6+'px';
-                    this.$refs.test.style.height = this.fArr[1]*0.6+'px'
+                    this.$refs.test.style.width = this.fArr[0]/2+'px';
+                    this.$refs.test.style.height = this.fArr[1]/2+'px'
                 }else if (this.fArr[0]<=1920 || this.fArr[1]<=1080){
-                    this.$refs.test.style.width = this.fArr[0]*0.5+'px';
-                    this.$refs.test.style.height = this.fArr[1]*0.5+'px'
+                    this.$refs.test.style.width = this.fArr[0]/3+'px';
+                    this.$refs.test.style.height = this.fArr[1]/3+'px'
                 }
             },
 
@@ -161,7 +162,7 @@
 
             //拖动时
             onDragging(x,y){
-                this.x = x;
+                this.x = x
                 this.y = y
             },
             //拖动结束
@@ -264,8 +265,8 @@
         text-align: center;
     }
     #test{
-        width: 500px;
-        height: 500px;
+        width: 640px;
+        height: 360px;
         margin: 0 auto;
         background: black;
         position: relative;
@@ -276,8 +277,8 @@
         margin-left:10px;
     }
     #img{
-        width: 200px;
-        height: 200px;
+        width: 160px;
+        height: 90px;
         display: none;
     }
 </style>

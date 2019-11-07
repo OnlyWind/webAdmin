@@ -18,6 +18,45 @@ export default new Router({
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
                 {
+                    path: '/boot',
+                    component: resolve => require(['../components/page/device/boot.vue'], resolve)
+                },
+                {
+                    path: '/class',
+                    component: resolve => require(['../components/page/device/class.vue'], resolve)
+                },
+                {
+                    path: '/device',
+                    component: resolve => require(['../components/page/device/device.vue'], resolve)
+                },
+                {
+                    path: '/resolution',
+                    component: resolve => require(['../components/page/device/resolution.vue'], resolve)
+                },
+
+                {
+                    path: '/material',
+                    component: resolve => require(['../components/page/program/material.vue'], resolve)
+                },
+                {
+                    path: '/mission',
+                    component: resolve => require(['../components/page/program/mission.vue'], resolve)
+                },
+                {
+                    path: '/program',
+                    component: resolve => require(['../components/page/program/program.vue'], resolve)
+                },
+                {
+                    path: '/template',
+                    component: resolve => require(['../components/page/program/template.vue'], resolve)
+                },
+
+
+                {
+                    path: '/class',
+                    component: resolve => require(['../components/page/device/class.vue'], resolve)
+                },
+                {
                     path: '/basetable',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve)
                 },
@@ -41,14 +80,7 @@ export default new Router({
                     path: '/upload',
                     component: resolve => require(['../components/page/Upload.vue'], resolve)       // Vue-Core-Image-Upload组件
                 },
-                {
-                    path: '/basecharts',
-                    component: resolve => require(['../components/page/BaseCharts.vue'], resolve)   // vue-schart组件
-                },
-                {
-                    path: '/drag',
-                    component: resolve => require(['../components/page/DragList.vue'], resolve)    // 拖拽列表组件
-                },
+
                 {
                     path: '/inform',
                     component: resolve => require(['../components/page/information.vue'], resolve)

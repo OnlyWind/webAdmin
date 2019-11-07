@@ -18,14 +18,15 @@
 </template>
 
 <script>
-    import {loginAjax} from "../api/api";
+    import {loginAjax,refreshTokenAjax} from "../api/api";
 
     export default {
         data: function(){
             return {
                 ruleForm: {
-                    username: 'yc',
-                    password: '123456'
+                    username: '1001',
+                    password: '123456',
+                    type:1
                 },
                 rules: {
                     username: [
@@ -43,13 +44,19 @@
                 that.$refs[formName].validate((valid) => {
                     if (valid) {
                         loginAjax(that.ruleForm).then(res=>{
-                            if (res.errno==0){
+                            if (res.code==0){
                                 localStorage.setItem('ms_username',that.ruleForm.username);
-                                this.$message.success('登录成功');
-                                this.$router.push('/readme');
+                                refreshTokenAjax({refresh_token:res.data.refresh_token}).then(res=>{
+                                    localStorage.setItem('access_token',res.data.access_token);
+                                    this.$message.success('登录成功');
+                                    this.$router.push('/readme');
+                                });
                             } else{
-                                this.$message.error(res.errmsg)
+                                this.$message.error(res.message)
                             }
+                        }).catch(res=>{
+                            let str = res.toString()
+                            this.$message.error(str)
                         })
                     } else {
                         console.log('error submit!!');
@@ -66,6 +73,8 @@
         position: relative;
         width:100%;
         height:100%;
+        background-image: url("/static/img/Frostedglass.jpg");
+        background-size: cover;
     }
     .ms-title{
         position: absolute;
