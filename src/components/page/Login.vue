@@ -4,7 +4,7 @@
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="username"></el-input>
+                    <el-input v-model="ruleForm.phoneNumber" placeholder="username"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
@@ -24,12 +24,12 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: '1001',
+                    phoneNumber: 'admin1',
                     password: '123456',
                     type:1
                 },
                 rules: {
-                    username: [
+                    phoneNumber: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
                     password: [
@@ -43,15 +43,18 @@
                 const that = this;
                 that.$refs[formName].validate((valid) => {
                     if (valid) {
+                        //发送登录请求
                         loginAjax(that.ruleForm).then(res=>{
                             if (res.code==0){
-                                localStorage.setItem('ms_username',that.ruleForm.username);
+                                localStorage.setItem('ms_username',that.ruleForm.phoneNumber);
+                                localStorage.setItem('userId',res.data.id);
+                                this.$message.success('登录成功');
+                                //登录成功后刷新token
                                 refreshTokenAjax({refresh_token:res.data.refresh_token}).then(res=>{
                                     localStorage.setItem('access_token',res.data.access_token);
-                                    this.$message.success('登录成功');
                                     this.$router.push('/readme');
                                 });
-                            } else{
+                            } else {
                                 this.$message.error(res.message)
                             }
                         }).catch(res=>{

@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <!--模板编辑界面-->
         <div id="test" ref="test">
             <vue-draggable-resizable :parent="true" v-for="(item,index) in dragArr" :key="index"
             :w="item.width" :h="item.height" :x="item.x" :y="item.y" :minw="50" :minh="50"
@@ -14,7 +15,11 @@
                 <p>{{item.text}}</p>
             </vue-draggable-resizable>
         </div>
+
+        <!--控件信息-->
         <p><span class="a">x:{{x}}</span><span class="a">y:{{y}}</span><span class="a">width:{{width}}</span><span class="a">height:{{height}}</span></p>
+
+        <!--添加模板按钮-->
         <el-button type="primary" @click="onVideo">视频</el-button>
         <el-button type="primary" @click="onImg">图片</el-button>
         <el-button type="primary" @click="onText">文字</el-button>
@@ -22,6 +27,8 @@
         <el-button type="success" @click="onTop">置顶</el-button>
         <el-button type="info" @click="onBtm">置底</el-button>
         <el-button type="primary" @click="onSave">保存</el-button>
+
+        <!--选择分辨率-->
         <el-select v-model="value" placeholder="请选择分辨率" style="margin-left: 10px;" @change="Resolution">
             <el-option
                 v-for="item in options"

@@ -65,6 +65,7 @@
         },
         methods: {
             handleCommand(command) {
+                //注销
                 if (command == 'loginout') {
                     localStorage.removeItem('ms_username');
                     logoutAjax().then(res=>{
@@ -86,6 +87,8 @@
                     this.dialogFormVisible = true
                 }
             },
+
+            //修改密码
             send(){
                 setPasswordAjax(this.forms).then(res=>{
                     if (res.code == 0){
@@ -100,6 +103,7 @@
                     localStorage.removeItem('access_token')
                 })
             },
+
             c1(){
                 for (var i = 0; i <this.dom.length ; i++) {
                     this.dom[i].classList.remove('active')

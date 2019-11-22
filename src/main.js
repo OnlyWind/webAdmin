@@ -44,7 +44,7 @@ axios.interceptors.request.use(function (config) {
     }else if(config.method==='get'){
         config.params={
             access_token:token,
-            uid:uid,
+            // uid:uid,
             ...config.params
         }
     }

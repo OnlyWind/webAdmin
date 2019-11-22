@@ -17,13 +17,27 @@ export default new Router({
                     path: '/',
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
+
+                //企业信息
+                {
+                    path: '/companyInfo',
+                    component: resolve => require(['../components/page/companyInfo/companyInfo.vue'], resolve)
+                },
+
+                //系统设置
+                {
+                    path:'/resolutionInfo',
+                    component: resolve => require(['../components/page/systemSetting/resolutionInfo.vue'], resolve)
+                },
+
+                //设备管理
                 {
                     path: '/boot',
                     component: resolve => require(['../components/page/device/boot.vue'], resolve)
                 },
                 {
-                    path: '/class',
-                    component: resolve => require(['../components/page/device/class.vue'], resolve)
+                    path: '/deviceClass',
+                    component: resolve => require(['../components/page/device/deviceClass.vue'], resolve)
                 },
                 {
                     path: '/device',
@@ -34,6 +48,9 @@ export default new Router({
                     component: resolve => require(['../components/page/device/resolution.vue'], resolve)
                 },
 
+
+
+                // 节目管理
                 {
                     path: '/material',
                     component: resolve => require(['../components/page/program/material.vue'], resolve)
@@ -52,10 +69,6 @@ export default new Router({
                 },
 
 
-                {
-                    path: '/class',
-                    component: resolve => require(['../components/page/device/class.vue'], resolve)
-                },
                 {
                     path: '/basetable',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve)

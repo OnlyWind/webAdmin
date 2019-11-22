@@ -33,6 +33,28 @@
                     {
                         icon: 'el-icon-menu',
                         index: '0',
+                        title: '企业管理',
+                        subs: [
+                            {
+                                index: 'companyInfo',
+                                title: '企业信息管理'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-menu',
+                        index: '5',
+                        title: '系统设置',
+                        subs: [
+                            {
+                                index: 'resolutionInfo',
+                                title: '分辨率管理'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-menu',
+                        index: '1',
                         title: '设备管理',
                         subs: [
                             {
@@ -40,22 +62,14 @@
                                 title: '设备管理'
                             },
                             {
-                                index: 'resolution',
-                                title: '分辨率管理'
-                            },
-                            {
-                                index: 'boot',
-                                title: '开关机管理'
-                            },
-                            {
-                                index: 'class',
-                                title: '分类管理'
+                                index: 'deviceClass',
+                                title: '设备分类管理'
                             }
                         ]
                     },
                     {
                         icon: 'el-icon-menu',
-                        index: '1',
+                        index: '2',
                         title: '节目管理',
                         subs: [
                             {
@@ -78,7 +92,7 @@
                     },
                     {
                         icon: 'el-icon-menu',
-                        index: '2',
+                        index: '3',
                         title: '表格',
                         subs: [
                             {
@@ -93,7 +107,7 @@
                     },
                     {
                         icon: 'el-icon-date',
-                        index: '3',
+                        index: '4',
                         title: '表单',
                         subs: [
                             {
