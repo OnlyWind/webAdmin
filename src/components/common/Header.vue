@@ -4,8 +4,8 @@
         <div class="header-router">
             <ul>
                 <li class="hearders active" @click="c1">信发系统</li>
-                <li class="hearders" @click="c2">鹰智荟</li>
-                <li class="hearders" @click="c3">长鹿家园</li>
+                <!--<li class="hearders" @click="c2">鹰智荟</li>-->
+                <!--<li class="hearders" @click="c3">长鹿家园</li>-->
             </ul>
         </div>
         <div class="user-info">
@@ -112,22 +112,22 @@
                 this.value = '广告信息发布系统'
                 localStorage.setItem('value',this.value)
             },
-            c2(){
-                for (var i = 0; i <this.dom.length ; i++) {
-                    this.dom[i].classList.remove('active')
-                }
-                this.dom[1].classList.add('active')
-                this.value = '鹰智荟'
-                localStorage.setItem('value',this.value)
-            },
-            c3(){
-                for (var i = 0; i <this.dom.length ; i++) {
-                    this.dom[i].classList.remove('active')
-                }
-                this.dom[2].classList.add('active')
-                this.value = '长鹿家园'
-                localStorage.setItem('value',this.value)
-            }
+            // c2(){
+            //     for (var i = 0; i <this.dom.length ; i++) {
+            //         this.dom[i].classList.remove('active')
+            //     }
+            //     this.dom[1].classList.add('active')
+            //     this.value = '鹰智荟'
+            //     localStorage.setItem('value',this.value)
+            // },
+            // c3(){
+            //     for (var i = 0; i <this.dom.length ; i++) {
+            //         this.dom[i].classList.remove('active')
+            //     }
+            //     this.dom[2].classList.add('active')
+            //     this.value = '长鹿家园'
+            //     localStorage.setItem('value',this.value)
+            // }
         }
     }
 </script>

@@ -20,7 +20,9 @@
         <el-dialog title="提示" :visible.sync="dialogVisible" style="width: 50%;margin: 0 auto;">
             <el-form inline>
                 <el-form-item label="分辨率：">
-                    <el-input v-model="resolution" placeholder="格式:宽x高" autocomplete="off"></el-input>
+                    <el-input v-model="resolution1" style="width: 100px" autocomplete="off"></el-input>
+                    <span>x</span>
+                    <el-input v-model="resolution2" style="width: 100px" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -45,6 +47,8 @@
     export default {
         data(){
             return{
+                resolution1:'',
+                resolution2:'',
                 resolution:'',
                 tableData:[],
                 total:0,
@@ -68,6 +72,7 @@
             },
             //添加分辨率
             onSend(){
+                this.resolution = this.resolution1+'x'+this.resolution2
                 addScreenAjax({userId:this.userId,resolution:this.resolution}).then(res=>{
                     if (res.code==0){
                         this.dialogVisible = false

@@ -19,6 +19,7 @@
                 <el-button type="primary" @click="onSearch">搜 索</el-button>
             </el-form-item>
         </el-form>
+
         <!--表格数据-->
         <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
             <el-table-column type="index" label=" " width="55"></el-table-column>
@@ -35,6 +36,11 @@
                     {{scope.row.province+scope.row.city+scope.row.area}}
                 </template>
             </el-table-column>
+            <el-table-column  label="状态">
+                <template  slot-scope="scope">
+                    {{scope.row.online==1?'在线':'不在线'}}
+                </template>
+            </el-table-column>
             <el-table-column prop="address" label='详细地址'  width="150"></el-table-column>
             <el-table-column label="操作" width="180">
                 <template scope="scope">
@@ -48,6 +54,14 @@
             <el-pagination background layout="total,jumper,prev, pager, next" :total="total" :page-size="postData.pageSize"
                            @current-change="handleCurrentChange"></el-pagination>
         </div>
+
+        <el-button type="primary" @click="generate">生成设备账号</el-button>
+        <!--设备账号列表-->
+        <el-table :data="userTable" border style="margin-top: 20px;width: 500px">
+            <el-table-column type="index" label=" " width="55"></el-table-column>
+            <el-table-column prop="username" label="账号"  width="150"></el-table-column>
+            <el-table-column prop="password" label="密码"  ></el-table-column>
+        </el-table>
         <!--编辑弹窗-->
         <el-dialog title="编辑设备信息" :visible.sync="dialogVisible" style="width: 60%;margin: 0 auto;">
             <el-form ref="form" :model="form" label-width="100px">
@@ -97,11 +111,12 @@
 </template>
 
 <script>
-    import {deviceAjax,querycomInfoAjax,updataDeviceAjax,alldeviceTypeAjax,allScreenAjax} from "../../api/api";
+    import {deviceAjax,querycomInfoAjax,updataDeviceAjax,alldeviceTypeAjax,allScreenAjax,generateUAndPAjax} from "../../api/api";
     import data from '../../../assets/city'
     export default {
         data(){
             return {
+                userTable:[],
                 s:'',
                 sh:'',
                 x:'',
@@ -120,7 +135,7 @@
                 openTime:[],
                 closeTime:[],
                 postData: {
-                    unitId:987654321,
+                    unitId:0,
                     deviceType:'',
                     deviceScreen:'',
                     deviceName:'',
@@ -145,6 +160,17 @@
             this.getData()
         },
         methods:{
+            //生成设备账号
+            generate(){
+                generateUAndPAjax({amount:2}).then(res=>{
+                    if (res.code == 0){
+                        this.userTable = res.data
+                        this.$message.success(res.message)
+                    }  else {
+                        this.$message.error(res.message)
+                    }
+                })
+            },
             changeAmount(e){
                 console.log(e)
                 // this.formInline.money = this.formInline.money.replace(/[^\d.]/g, '')
@@ -154,7 +180,7 @@
                 querycomInfoAjax({userId:localStorage.getItem('userId')}).then(res=>{
                     if (res.code==0){
                         // 正式版调用
-                        // this.postData.unitId = res.data.unitId
+                        this.postData.unitId = res.data.unitId
                     }
                 })
                 //设备信息

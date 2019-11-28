@@ -7,9 +7,6 @@
             <el-form-item label="说明">
                 <el-input v-model="form.explain"></el-input>
             </el-form-item>
-            <el-form-item label="状态">
-                <el-input v-model="form.state"></el-input>
-            </el-form-item>
             <el-form-item label="地区">
                 {{form.diqu}}
             </el-form-item>
@@ -38,7 +35,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onadd">添加</el-button>
-                <el-button type="primary" @click="onSubmit">编辑</el-button>
+                <el-button type="primary" @click="onSubmit">提交编辑</el-button>
             </el-form-item>
             <el-form-item>
                 <span style="color: red;font-size: 20px">*</span>   <span style="font-size: 12px;color: darkgray">一个账号只能添加一个企业</span>

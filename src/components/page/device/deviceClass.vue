@@ -62,12 +62,12 @@
                 EditDeviceType:'',
                 deviceTypeId:0,
                 userId:localStorage.getItem('userId'),
-                unitId:987654321/*localStorage.getItem('unitId')*/,
+                unitId:localStorage.getItem('unitId'),
                 dialogVisible:false,
                 dialogVisible1:false,
                 dialogVisible2:false,
                 postData:{
-                    unitId:987654321/*localStorage.getItem('unitId')*/,
+                    unitId:localStorage.getItem('unitId'),
                     pageSize:10,
                     pageNum:1
                 }

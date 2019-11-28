@@ -49,11 +49,17 @@
                                 localStorage.setItem('ms_username',that.ruleForm.phoneNumber);
                                 localStorage.setItem('userId',res.data.id);
                                 this.$message.success('登录成功');
+
                                 //登录成功后刷新token
-                                refreshTokenAjax({refresh_token:res.data.refresh_token}).then(res=>{
-                                    localStorage.setItem('access_token',res.data.access_token);
-                                    this.$router.push('/readme');
-                                });
+                                // refreshTokenAjax({refresh_token:res.data.refresh_token}).then(res=>{
+                                //     localStorage.setItem('access_token',res.data.access_token);
+                                //     this.$router.push('/readme');
+                                // });
+
+                                //test
+                                localStorage.setItem('access_token',res.data.access_token);
+                                this.$router.push('/readme');
+
                             } else {
                                 this.$message.error(res.message)
                             }

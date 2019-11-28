@@ -44,13 +44,18 @@ axios.interceptors.request.use(function (config) {
     }else if(config.method==='get'){
         config.params={
             access_token:token,
-            // uid:uid,
             ...config.params
         }
     }
     return config
 }, function (error) {
     // Do something with request error
+    vm.$confirm('登录信息已失效请重新登录', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+    }).then(() => {
+        router.push({ path: '/' })
+    })
     return Promise.reject(error);
 });
 
