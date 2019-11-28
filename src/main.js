@@ -49,6 +49,7 @@ axios.interceptors.request.use(function (config) {
     }
     return config
 }, function (error) {
+    console.log(error)
     // Do something with request error
     ElementUI.Message({
         message: '登录信息已失效请重新登录',

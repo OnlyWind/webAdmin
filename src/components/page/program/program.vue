@@ -258,16 +258,16 @@
                     this.form.runTime = year+'/'+month+'/'+date+time
                     delete  this.form.date1
                     delete  this.form.date2
-                    console.log(this.form)
-                    // addTaskAjax(this.form).then(res=>{
-                    //     if (res.code==0){
-                    //         this.form.taskName = '',
-                    //         this.$message.success(res.message)
-                    //         this.addTaskDialogVisible = false
-                    //     } else {
-                    //         this.$message.error(res.message)
-                    //     }
-                    // })
+                    // console.log(this.form)
+                    addTaskAjax(this.form).then(res=>{
+                        if (res.code==0){
+                            this.form.taskName = '',
+                            this.$message.success(res.message)
+                            this.addTaskDialogVisible = false
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
                 }
 
             },
