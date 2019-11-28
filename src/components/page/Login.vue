@@ -26,7 +26,9 @@
                 ruleForm: {
                     phoneNumber: 'admin1',
                     password: '123456',
-                    type:1
+                    type:1,
+                    deviceType:2,
+                    applicationType:2
                 },
                 rules: {
                     phoneNumber: [

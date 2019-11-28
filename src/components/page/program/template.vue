@@ -60,7 +60,6 @@
             </div>
         </el-dialog>
 
-
         <!--删除模板提示-->
         <el-dialog title="删除模板" :visible.sync="deleteDialogVisible" style="width: 50%;margin: 0 auto;">
             <span style="display: block;">确定删除这个模板吗?</span>
@@ -86,15 +85,15 @@
             <div class="tembox">
                 <div id="test" ref="test">
                     <vue-draggable-resizable :parent="true" v-for="(item,index) in dragArr" :key="index"
-                                             :w="item.width" :h="item.height" :x="item.x" :y="item.y" :minw="50" :minh="50"
-                                             @activated="onclick(index)"
-                                             @dragstop="onDragstop(index)"
-                                             @resizestop="onResizstop(index)"
-                                             @resizing="onResizing"
-                                             @dragging="onDragging"
-                                             @deactivated="onDeactivated"
-                                             :z="item.zIndex"
-                                             :style="item.text=='video'?'background: skyblue':item.text=='img'?'background: greenyellow':'background: darkgrey'">
+                         :w="item.width" :h="item.height" :x="item.x" :y="item.y" :minw="50" :minh="50"
+                         @activated="onclick(index)"
+                         @dragstop="onDragstop(index)"
+                         @resizestop="onResizstop(index)"
+                         @resizing="onResizing"
+                         @dragging="onDragging"
+                         @deactivated="onDeactivated"
+                         :z="item.zIndex"
+                         :style="item.text=='video'?'background: skyblue':item.text=='img'?'background: greenyellow':'background: darkgrey'">
                         <p>{{item.viewName}}</p>
                     </vue-draggable-resizable>
                 </div>
@@ -117,7 +116,8 @@
                     <span class="a">x:{{x}}</span>
                     <span class="a">y:{{y}}</span>
                     <span class="a">width:{{width}}</span>
-                    <span class="a">height:{{height}}</span></p>
+                    <span class="a">height:{{height}}</span>
+                </p>
             </el-card>
             <div class="tem-info">
             </div>
@@ -403,6 +403,7 @@
             },
             //打开添加模板弹窗
             onaddTem(){
+               i=0
                this.flagVideo = true
                this.dialogVisible = true
                this.params.src = ''
@@ -494,9 +495,9 @@
                 var idx = sessionStorage.getItem('Idx')
                 if (idx){
                     for (var i = 0; i <this.dragArr.length ; i++) {
-                        this.dragArr[i].zIndex = 0
+                        this.dragArr[i].zIndex = 1
                     }
-                    this.dragArr[idx].zIndex = 1
+                    this.dragArr[idx].zIndex = 2
                 }
             },
             //置底
@@ -504,9 +505,9 @@
                 var idx = sessionStorage.getItem('Idx')
                 if (idx){
                     for (var i = 0; i <this.dragArr.length ; i++) {
-                        this.dragArr[i].zIndex = 1
+                        this.dragArr[i].zIndex = 2
                     }
-                    this.dragArr[idx].zIndex = 0
+                    this.dragArr[idx].zIndex = 1
                 }
             },
             //保存

@@ -50,12 +50,11 @@ axios.interceptors.request.use(function (config) {
     return config
 }, function (error) {
     // Do something with request error
-    vm.$confirm('登录信息已失效请重新登录', '提示', {
-        confirmButtonText: '确定',
-        type: 'warning'
-    }).then(() => {
-        router.push({ path: '/' })
-    })
+    ElementUI.Message({
+        message: '登录信息已失效请重新登录',
+        type: 'error'
+    });
+    router.push({ path: '/' })
     return Promise.reject(error);
 });
 
@@ -74,6 +73,11 @@ axios.interceptors.response.use( (response) => {
     // 对响应数据做点什么
     return response;
 }, function (error) {
+    ElementUI.Message({
+        message: '登录信息已失效请重新登录',
+        type: 'error'
+    });
+    router.push({ path: '/' })
     // 对响应错误做点什么
     return Promise.reject(error);
 });

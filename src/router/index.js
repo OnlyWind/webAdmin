@@ -43,6 +43,10 @@ export default new Router({
                     path: '/device',
                     component: resolve => require(['../components/page/device/device.vue'], resolve)
                 },
+                {
+                    path: '/deviceUser',
+                    component: resolve => require(['../components/page/device/deviceUser.vue'], resolve)
+                },
 
 
 

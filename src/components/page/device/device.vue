@@ -55,13 +55,7 @@
                            @current-change="handleCurrentChange"></el-pagination>
         </div>
 
-        <el-button type="primary" @click="generate">生成设备账号</el-button>
-        <!--设备账号列表-->
-        <el-table :data="userTable" border style="margin-top: 20px;width: 500px">
-            <el-table-column type="index" label=" " width="55"></el-table-column>
-            <el-table-column prop="username" label="账号"  width="150"></el-table-column>
-            <el-table-column prop="password" label="密码"  ></el-table-column>
-        </el-table>
+
         <!--编辑弹窗-->
         <el-dialog title="编辑设备信息" :visible.sync="dialogVisible" style="width: 60%;margin: 0 auto;">
             <el-form ref="form" :model="form" label-width="100px">
@@ -160,17 +154,6 @@
             this.getData()
         },
         methods:{
-            //生成设备账号
-            generate(){
-                generateUAndPAjax({amount:2}).then(res=>{
-                    if (res.code == 0){
-                        this.userTable = res.data
-                        this.$message.success(res.message)
-                    }  else {
-                        this.$message.error(res.message)
-                    }
-                })
-            },
             changeAmount(e){
                 console.log(e)
                 // this.formInline.money = this.formInline.money.replace(/[^\d.]/g, '')

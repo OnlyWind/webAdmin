@@ -87,7 +87,7 @@ export const delProgramAjax = params => { return axios.post('/info/api/programs/
 export const queryTaskAjax = params => { return axios.post('/info/api/tasks/queryTask', qs.stringify(params)).then(res => res.data); };
 //添加任务
 export const addTaskAjax = params => { return axios.post('/info/api/tasks/addTask', qs.stringify(params)).then(res => res.data); };
-//推送任务
+//推送任务(已停用)
 // export const pushTaskAjax = params => { return axios.post('/info/api/tasks/pushTask', qs.stringify(params)).then(res => res.data); };
 
 

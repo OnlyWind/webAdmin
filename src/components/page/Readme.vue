@@ -17,20 +17,20 @@
                 <br>
                 <el-checkbox disabled checked>登录/注销</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>表格</el-checkbox>
+                <el-checkbox disabled checked>模板编辑</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>表单</el-checkbox>
+                <el-checkbox disabled checked>添加节目</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>图表</el-checkbox>
+                <el-checkbox disabled checked>推送任务</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>富文本编辑器</el-checkbox>
-                <br>
+                <!--<el-checkbox disabled checked>富文本编辑器</el-checkbox>-->
+                <!--<br>-->
                 <el-checkbox disabled checked>信息发布系统</el-checkbox>
-                <br>
-                <el-checkbox disabled checked>鹰智荟后台</el-checkbox>
-                <br>
-                <el-checkbox disabled checked>长鹿家园后台</el-checkbox>
-                <br>
+                <!--<br>-->
+                <!--<el-checkbox disabled checked>鹰智荟后台</el-checkbox>-->
+                <!--<br>-->
+                <!--<el-checkbox disabled checked>长鹿家园后台</el-checkbox>-->
+                <!--<br>-->
             </article>
         </div>
 

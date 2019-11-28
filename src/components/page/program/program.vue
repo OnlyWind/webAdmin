@@ -154,7 +154,7 @@
                     taskName:'',
                     runTime:'',
                     taskLevel:'',
-                    runTimeLength:'',
+                    runTimeLength:0,
                     programId:'',
                     deviceIds:'',
                     userId:localStorage.getItem('userId'),
@@ -242,23 +242,34 @@
                 this.addTaskDialogVisible = true
             },
             sendTask(){
-                let year = this.form.date1.getFullYear()
-                let month = this.form.date1.getMonth()+1
-                let date = this.form.date1.getDate()
-                let time = this.form.date2.toString().slice(15,24)
-                // console.log(this.form.date2.toString().slice(15,24))
-                this.form.runTime = year+'/'+month+'/'+date+time
-                delete  this.form.date1
-                delete  this.form.date2
-                addTaskAjax(this.form).then(res=>{
-                    if (res.code==0){
-                        this.form.taskName = '',
-                        this.$message.success(res.message)
-                        this.addTaskDialogVisible = false
-                    } else {
-                        this.$message.error(res.message)
-                    }
-                })
+                if (this.form.taskName == ''){
+                    this.$message.error('请输入任务名')
+                } else if (this.form.date1 ==null || this.form.date2 ==null){
+                    this.$message.error('请选择播放日期和时间')
+                } else if (this.form.taskLevel == ''){
+                    this.$message.error('请选择播放级别')
+                } else if (this.form.deviceIds == '') {
+                    this.$message.error('请选择播放设备')
+                } else {
+                    let year = this.form.date1.getFullYear()
+                    let month = this.form.date1.getMonth()+1
+                    let date = this.form.date1.getDate()
+                    let time = this.form.date2.toString().slice(15,24)
+                    this.form.runTime = year+'/'+month+'/'+date+time
+                    delete  this.form.date1
+                    delete  this.form.date2
+                    console.log(this.form)
+                    // addTaskAjax(this.form).then(res=>{
+                    //     if (res.code==0){
+                    //         this.form.taskName = '',
+                    //         this.$message.success(res.message)
+                    //         this.addTaskDialogVisible = false
+                    //     } else {
+                    //         this.$message.error(res.message)
+                    //     }
+                    // })
+                }
+
             },
             //调起编辑节目弹窗
             handleEdit(res){
@@ -428,6 +439,9 @@
                     } else {
                         this.$message.error('请选择素材')
                     }
+
+
+                //bug
                 // if (this.resourceIdList.length){
                 //     for (let j = 0; j <this.resourceIdList.length ; j++) {
                 //         this.resourceIds += this.resourceIdList[j]+','  //素材文件名集合
