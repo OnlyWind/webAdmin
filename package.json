@@ -2,7 +2,7 @@
   "name": "manage-system",
   "version": "2.1.0",
   "description": "后台管理系统",
-  "author": "lin-xin <2981207131@qq.com>",
+  "author": "leiwei <1634909529@qq.com>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

@@ -49,13 +49,12 @@ axios.interceptors.request.use(function (config) {
     }
     return config
 }, function (error) {
-    console.log(error)
     // Do something with request error
     ElementUI.Message({
         message: '登录信息已失效请重新登录',
         type: 'error'
     });
-    router.push({ path: '/' })
+    // router.push({ path: '/' })
     return Promise.reject(error);
 });
 
@@ -63,22 +62,21 @@ axios.interceptors.request.use(function (config) {
 
 //登录拦截器
 axios.interceptors.response.use( (response) => {
-    if(response.data.code=='401'||response.data.code==401){
-        vm.$confirm('登录信息已失效请重新登录', '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
-        }).then(() => {
-            router.push({ path: '/' })
-        })
-    }
     // 对响应数据做点什么
     return response;
 }, function (error) {
-    ElementUI.Message({
-        message: '登录信息已失效请重新登录',
-        type: 'error'
-    });
-    router.push({ path: '/' })
     // 对响应错误做点什么
+    if (error.toString().search('402') != -1) {
+        ElementUI.Message({
+            message: '登录信息已失效请重新登录',
+            type: 'error'
+        });
+        router.push({ path: '/' })
+    } else {
+        ElementUI.Message({
+            message: '发生错误，请联系管理员',
+            type: 'error'
+        });
+    }
     return Promise.reject(error);
 });
