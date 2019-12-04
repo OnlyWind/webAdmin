@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--<el-button type="primary" @click="add()">添加节目</el-button>-->
-        <el-input v-model="searchText" style="width: 220px;margin-left: 50px;" placeholder="请输入节目单名"></el-input>
+        <el-input v-model="searchText" style="width: 220px;" placeholder="请输入节目单名"></el-input>
         <el-button type="primary" @click="search" style="margin-left: 10px;">搜 索</el-button>
         <el-button type="warning" @click="reset">重 置</el-button>
         <!--节目列表-->
@@ -58,8 +58,8 @@
                 <el-table-column prop="infoTemplateViewInfo.viewName" label="控件名"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template scope="scope">
-                        <el-button size="small" type="primary"
-                                   @click="handleUpdata(scope.row)">选择素材</el-button>
+                        <el-button size="small" type="primary" :disabled="scope.row.infoTemplateViewInfo.viewId==4?true:false"
+                                   @click="handleUpdata(scope.row)" >选择素材</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -83,8 +83,6 @@
             </div>
         </el-dialog>
 
-
-
         <!--发布任务弹窗-->
         <el-dialog title="发布任务" :visible.sync="addTaskDialogVisible" style="width: 100%;margin: 0 auto;">
             <el-form ref="form" :model="form" label-width="100px">
@@ -97,8 +95,7 @@
                         align="right"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions1">
+                        placeholder="选择日期">
                     </el-date-picker>
                     <el-time-picker
                         v-model="form.date2"
@@ -158,6 +155,7 @@
                     programId:'',
                     deviceIds:'',
                     userId:localStorage.getItem('userId'),
+                    realResolution:'270x480'  //先固定，后面会改动
                 },
                 addTaskDialogVisible:false,
                 resourceIds:'',
@@ -185,33 +183,12 @@
                 searchText:'',
                 userId:localStorage.getItem('userId'),
                 currentPage:1,
-                pageSize: 10,
-                pickerOptions1: {
-                    shortcuts: [{
-                        text: '今天',
-                        onClick(picker) {
-                            picker.$emit('pick', new Date());
-                        }
-                    }, {
-                        text: '昨天',
-                        onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24);
-                            picker.$emit('pick', date);
-                        }
-                    }, {
-                        text: '一周前',
-                        onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', date);
-                        }
-                    }]
-                }
+                pageSize: 10
             }
         },
         mounted(){
             this.getTableData()
+            //获取设备列表
             deviceAjax({unitId:localStorage.getItem('unitId'),pageNum:1,pageSize:10}).then(res=>{
                 for (let i = 0; i <res.data.deviceList.length ; i++) {
                     this.deviceNameList.push({
@@ -219,7 +196,6 @@
                         index:res.data.deviceList[i].deviceIdent
                     })
                 }
-                console.log(this.deviceNameList)
             })
         },
         methods:{
@@ -241,6 +217,7 @@
                 this.form.programId = row.programId
                 this.addTaskDialogVisible = true
             },
+            //推送任务执行
             sendTask(){
                 if (this.form.taskName == ''){
                     this.$message.error('请输入任务名')
@@ -258,7 +235,7 @@
                     this.form.runTime = year+'/'+month+'/'+date+time
                     delete  this.form.date1
                     delete  this.form.date2
-                    // console.log(this.form)
+                    console.log(this.form)
                     addTaskAjax(this.form).then(res=>{
                         if (res.code==0){
                             this.form.taskName = '',
@@ -269,7 +246,6 @@
                         }
                     })
                 }
-
             },
             //调起编辑节目弹窗
             handleEdit(res){
@@ -278,6 +254,7 @@
                 this.programId = res.programId
                 this.updateList = res.infoProgramList
                 this.editDialogVisible = true
+                this.infoProgramListString = []
             },
             //修改节目单名
             editProgName(){
@@ -349,8 +326,8 @@
             },
             //修改页面选择素材
             handleUpdata(row){
-                this.programListId = row.programListId
                 console.log(row)
+                this.programListId = row.programListId
                 let queryParams = {
                     userId:this.userId,
                     pageSize:100,
@@ -382,7 +359,7 @@
             sendProgram(){
                 if (this.programName && this.temName) {
                     if (this.infoProgramList.length) {
-                        let sendParams = {
+                        let sendParams = {//
                             userId:this.userId,
                             programName:this.programName,
                             templateId:this.programView.templateId,
@@ -420,113 +397,75 @@
                 let num = 0
                 let length1 = 0
                 let num1 = 0
-                if (this.resourceIdList.length){
-                        for (let j = 0; j <this.resourceIdList.length ; j++) {
-                            this.infoProgramList.push({
-                                temviewId:this.chooseTemplateId,
-                                resourceIds:this.resourceIdList[j]
-                            })
-                            this.infoProgramListString.push({
-                                resourceIds:this.resourceIdList[j],
-                                programListId:this.programListId
-                            })
-                        }
-                        this.resourceIdList = []
-                        this.materialDialogVisible = false
-                        this.$message.success('选择成功！')
-                        console.log(this.infoProgramList)
-                        console.log(this.infoProgramListString)
-                    } else {
-                        this.$message.error('请选择素材')
-                    }
+                // if (this.resourceIdList.length){
+                //         for (let j = 0; j <this.resourceIdList.length ; j++) {
+                //             // this.infoProgramList.push({
+                //             //     temviewId:this.chooseTemplateId,
+                //             //     resourceIds:this.resourceIdList[j]
+                //             // })
+                //             this.infoProgramListString.push({
+                //                 resourceIds:this.resourceIdList[j],
+                //                 programListId:this.programListId
+                //             })
+                //         }
+                //         this.resourceIdList = []
+                //         this.materialDialogVisible = false
+                //         this.$message.success('选择成功！')
+                //         console.log(this.infoProgramList)
+                //         console.log(this.infoProgramListString)
+                //     } else {
+                //         this.$message.error('请选择素材')
+                //     }
 
 
                 //bug
-                // if (this.resourceIdList.length){
-                //     for (let j = 0; j <this.resourceIdList.length ; j++) {
-                //         this.resourceIds += this.resourceIdList[j]+','  //素材文件名集合
-                //     }
-                //     if (this.infoProgramList.length) {
-                //         length = this.infoProgramList.length
-                //         for (let n = 0; n <length ; n++) {
-                //             if (this.infoProgramList[n].temviewId*1 == this.chooseTemplateId*1){//先判断有无相同控件
-                //                 num = 1
-                //                 this.infoProgramList[n] = {//有相同控件就覆盖
-                //                     temviewId:this.chooseTemplateId,
-                //                     resourceIds:this.resourceIds.slice(0,-1)
-                //                 }
-                //             }
-                //         }
-                //         for (let n = 0; n <length ; n++) {
-                //             if (this.infoProgramList[n].temviewId*1 != this.chooseTemplateId*1){
-                //                 if (num==0) {
-                //                     num = 1
-                //                     this.infoProgramList.push({
-                //                         temviewId:this.chooseTemplateId    ,
-                //                         resourceIds:this.resourceIds.slice(0,-1)
-                //                     })
-                //                 }
-                //             }
-                //         }
-                //     } else {
-                //         this.infoProgramList.push({
-                //             temviewId:this.chooseTemplateId,
-                //             resourceIds:this.resourceIds.slice(0,-1)
-                //         })
-                //     }
-                //
-                //     if (this.infoProgramListString.length) {
-                //         length1 = this.infoProgramListString.length
-                //         for (let n = 0; n <length1 ; n++) {
-                //             if (this.infoProgramListString[n].temviewId*1 == this.chooseTemplateId*1){//先判断有无相同控件
-                //                 num1 = 1
-                //                 console.log('覆盖')
-                //                 this.infoProgramListString[n] = {//有相同控件就覆盖
-                //                     programListId:this.programListId,
-                //                     resourceIds:this.resourceIds.slice(0,-1)
-                //                 }
-                //             }
-                //         }
-                //         for (let n = 0; n <length ; n++) {
-                //             if (this.infoProgramListString[n].temviewId*1 != this.chooseTemplateId*1){
-                //                 if (num1==0) {
-                //                     console.log('添加')
-                //                     num1 = 1
-                //                     this.infoProgramListString.push({
-                //                         programListId:this.programListId    ,
-                //                         resourceIds:this.resourceIds.slice(0,-1)
-                //                     })
-                //                 }
-                //             }
-                //         }
-                //     } else {
-                //         console.log(1)
-                //         this.infoProgramListString.push({
-                //             programListId:this.programListId,
-                //             resourceIds:this.resourceIds.slice(0,-1)
-                //         })
-                //     }
-                //
-                //
-                //
-                //     // for (let j = 0; j <this.resourceIdList.length ; j++) {
-                //     //     this.infoProgramList.push({
-                //     //         temviewId:this.chooseTemplateId,
-                //     //         resourceIds:this.resourceIdList[j]
-                //     //     })
-                //     //     this.infoProgramListString.push({
-                //     //         resourceIds:this.resourceIdList[j],
-                //     //         programListId:this.programListId
-                //     //     })
-                //     // }
-                //     this.resourceIdList = []
-                //     this.materialDialogVisible = false
-                //     this.$message.success('选择成功！')
-                //     // console.log(this.infoProgramList)
-                //     console.log(this.infoProgramListString)
-                // } else {
-                //     this.$message.error('请选择素材')
-                // }
+                if (this.resourceIdList.length){
+                    //选择的素材文件名集合
+                    for (let j = 0; j <this.resourceIdList.length ; j++) {
+                        this.resourceIds += this.resourceIdList[j]+','
+                    }
+                    //先判断参数集合有没有数据
+                    if (this.infoProgramListString.length) {
+                        length1 = this.infoProgramListString.length
+                        //有数据就遍历
+                        //第一次遍历是判断有没有相同控件
+                        for (let n = 0; n <length1 ; n++) {
+                            if (this.infoProgramListString[n].programListId*1 == this.programListId*1){
+                                console.log('相同控件')
+                                num = 1 //记录有相同控件
+                                this.infoProgramListString[n] = {//有相同控件就覆盖
+                                    programListId:this.programListId,
+                                    resourceIds:this.resourceIds.slice(0,-1)
+                                }
+                            }
+                        }
+                        //第二次遍历是添加新参数到参数数组
+                        for (let n = 0; n <length1 ; n++) {
+                            if (this.infoProgramListString[n].programListId*1 != this.programListId*1){
+                                if (num==0) {
+                                    console.log('添加')
+                                    num = 1
+                                    this.infoProgramListString.push({
+                                        programListId:this.programListId    ,
+                                        resourceIds:this.resourceIds.slice(0,-1)
+                                    })
+                                }
+                            }
+                        }
+                    } else {
+                        console.log('新添加')
+                        this.infoProgramListString.push({
+                            programListId:this.programListId,
+                            resourceIds:this.resourceIds.slice(0,-1)
+                        })
+                    }
+                    this.resourceIdList = []
+                    this.materialDialogVisible = false
+                    this.$message.success('选择成功！')
+                    console.log(this.infoProgramListString)
+                } else {
+                    this.$message.error('请选择素材')
+                }
             },
             //删除节目
             handleDelete(res){

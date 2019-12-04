@@ -74,7 +74,7 @@ axios.interceptors.response.use( (response) => {
         router.push({ path: '/' })
     } else {
         ElementUI.Message({
-            message: '发生错误，请联系管理员',
+            message: '服务器错误或网络延迟',
             type: 'error'
         });
     }

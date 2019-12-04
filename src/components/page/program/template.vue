@@ -6,7 +6,7 @@
         </el-select>
         <el-input v-model="templateName" placeholder="请输入模板名" style="width: 220px;margin-left: 20px;"></el-input>
         <el-button type="primary" @click="search">搜索</el-button>
-        <el-button type="primary" @click="clear">重置</el-button>
+        <el-button type="warning" @click="clear">重置</el-button>
         <div class="tem-box">
             <div class="img-wrap" style="width: 280px; display: inline-block;margin-top: 20px;" v-for="(item,index) in templateData">
                 <template>
@@ -35,7 +35,7 @@
                 <el-table-column prop="viewName" label="控件名"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template scope="scope">
-                        <el-button size="small" type="primary"
+                        <el-button size="small" type="primary" :disabled="scope.row.viewId==4?true:false"
                                    @click="handle(scope.row)">选择素材</el-button>
                     </template>
                 </el-table-column>
@@ -68,18 +68,19 @@
                 <el-button type="primary" @click="deleteTem">确 定</el-button>
             </div>
         </el-dialog>
+
+
         <!--编辑模板-->
-        <el-dialog title="编辑模板"  :visible.sync="dialogVisible" style="width: 125%;margin-left: -100px;">
-            <div class="top">
-                <el-button type="primary" @click="onVideo">添加视频</el-button>
-                <el-button type="primary" @click="onImg">添加图片</el-button>
-                <el-button type="primary" @click="onText">添加文字</el-button>
-                <el-button type="danger" @click="onDel">删除</el-button>
-                <el-button type="success" @click="onTop">置顶</el-button>
-                <el-button type="info" @click="onBtm">置底</el-button>
-                <el-button type="primary" style="float: right;" @click="onSave">保存</el-button>
-                <el-input placeholder="请输入模板名" v-model="params.temName" style="width: 220px; float: right;"></el-input>
-            </div>
+        <el-dialog title="编辑模板"  :visible.sync="dialogVisible" style="width: 170%;" class="el-dialog-tem">
+            <el-card class="box-card-left">
+                <div class="top">
+                    <el-button type="primary" class="topBtn" @click="onVideo" style="margin-left: 10px;">添加视频</el-button>
+                    <el-button type="primary" class="topBtn" @click="onImg">添加图片</el-button>
+                    <el-button type="primary" class="topBtn" @click="onText">添加文字</el-button>
+                    <el-button type="primary" class="topBtn" @click="onTime">添加时间</el-button>
+                </div>
+            </el-card>
+
 
             <!--模板编辑界面-->
             <div class="tembox">
@@ -99,45 +100,56 @@
                 </div>
             </div>
 
-            <!--选择分辨率-->
-            <div style="margin-top: 20px; overflow: hidden">
-                <span style="margin-left: 20px;">选择分辨率</span>
-            </div>
-            <el-select v-model="value" placeholder="请选择分辨率" style="margin-left: 20px;" @change="Resolution">
-                <el-option
-                    v-for="item in temResolutionArr"
-                    :label="item"
-                    :value="item">
-                </el-option>
-            </el-select>
-            <!--控件信息-->
-            <el-card class="box-card">
-                <p>
-                    <span class="a">x:{{x}}</span>
-                    <span class="a">y:{{y}}</span>
-                    <span class="a">width:{{width}}</span>
-                    <span class="a">height:{{height}}</span>
-                </p>
-            </el-card>
-            <div class="tem-info">
+            <div style="float:left;">
+                <!--选择分辨率-->
+                <div style="overflow: hidden">
+                    <span style="margin-left: 20px;">选择分辨率</span>
+                    <el-select v-model="value" placeholder="请选择分辨率" style="margin-left: 20px;" @change="Resolution">
+                        <el-option
+                            v-for="item in temResolutionArr"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </div>
+                <!--控件信息-->
+                <el-card class="box-card">
+                    <p>
+                        <span class="a">x:{{x}}</span>
+                        <span class="a">y:{{y}}</span>
+                        <span class="a">width:{{width}}</span>
+                        <span class="a">height:{{height}}</span>
+                    </p>
+
+                </el-card>
+                <div class="tem-info">
+                    <el-button type="success" @click="onTop">置顶</el-button>
+                    <el-button type="info" @click="onBtm">置底</el-button>
+                    <el-button type="danger" @click="onDel">删除</el-button>
+                </div>
+                <div class="save">
+                    <el-input placeholder="请输入模板名" style="width:200px" v-model="params.temName"></el-input>
+                    <el-button type="primary" @click="onSave">保存模板</el-button>
+                </div>
+                <!--缩略图-->
+                <!--<div style="width: 160px;height: 90px; margin:20px 0 0 20px;float:left;">-->
+                    <!--<img :src="src" id="img">-->
+                <!--</div>-->
             </div>
 
 
-
-            <div style="width: 160px;height: 90px; margin:20px 0 0 20px;float:left;">
-                <img :src="src" id="img">
-            </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import html2canvas from 'html2canvas';
-    let i=0
+    let numTem=0
     import {queryTemplateAjax,addTemplateAjax,editTemplateAjax,delteTemplateAjax,allresolutionAjax,queryresourcesAjax,addProgramAjax} from "../../api/api";
     export default {
         data(){
             return{
+                realResolution:'',//真实分辨率
                 infoProgramLists:[],
                 resourceIds:'',
                 chooseTemplateId:0,
@@ -150,7 +162,7 @@
                 viewList:{},
                 edITFlag:false,
                 templateName:'',
-                templateId:'',
+                // templateId:'',
                 templateData:[],
                 templateId:0,
                 templateParams:{
@@ -167,16 +179,7 @@
                 y:0,
                 width:100,
                 height:100,
-                flagVideo:true,
-                obj:{
-                    name:'',
-                    src:'',
-                    width:0,
-                    height:0,
-                    img:[],
-                    video:[],
-                    text:[]
-                },
+                flagVideo:true,//控制视频控件数量的依据
                 params:{//添加模板api参数
                     userId:localStorage.getItem('userId'),
                     temName:'',
@@ -196,6 +199,7 @@
                 pageSize:10,
                 currentPage:1,
                 total:0,
+                k:0.3//模板缩放比例
             }
         },
         mounted(){
@@ -209,6 +213,12 @@
                 this.programDialogVisible = true
                 this.programView = res
                 this.sendTemId = res.templateId
+                for (let j = 0; j <this.programView.viewList.length ; j++) {
+                    //如果有时间控件，直接添加素材id为0的节目
+                    if (this.programView.viewList[j].viewId==4) {
+                        this.infoProgramList.push({"temviewId":this.programView.viewList[j].temviewId,"resourceIds":"0"})
+                    }
+                }
             },
             //选择素材
             handle(row){
@@ -298,7 +308,6 @@
                         templateId:this.sendTemId,
                         infoProgramListString:JSON.stringify(this.infoProgramList)
                     }
-                    console.log(sendParams)
                     addProgramAjax(sendParams).then(res=>{
                         if (res.code == 0){
                             this.programName = ''
@@ -403,7 +412,7 @@
             },
             //打开添加模板弹窗
             onaddTem(){
-               i=0
+               numTem=0
                this.flagVideo = true
                this.dialogVisible = true
                this.params.src = ''
@@ -421,12 +430,16 @@
                 }
             },
             onImg(){
-                i++
-                this.dragArr.push(this.copyObj(this.module('img',2,'img'+i)))
+                numTem++
+                this.dragArr.push(this.copyObj(this.module('img',2,'img'+numTem)))
             },
             onText(){
-                i++
-                this.dragArr.push(this.copyObj(this.module('text',3,'text'+i)))
+                numTem++
+                this.dragArr.push(this.copyObj(this.module('text',3,'text'+numTem)))
+            },
+            onTime(){
+                numTem++
+                this.dragArr.push(this.copyObj(this.module('time',4,'time'+numTem)))
             },
             //选择分辨率
             Resolution(){
@@ -436,16 +449,18 @@
                 //在选择分辨率的时候重置控件数组
                 this.dragArr = []
                 this.fArr = this.value.split("x")
-                if (this.fArr[0]<=360 || this.fArr[1]<=640){
-                    this.$refs.test.style.width = this.fArr[0]*3/4+'px';
-                    this.$refs.test.style.height = this.fArr[1]*3/4+'px'
-                }else if (this.fArr[0]<=768 || this.fArr[1]<=1280) {
-                    this.$refs.test.style.width = this.fArr[0]*3/8+'px';
-                    this.$refs.test.style.height = this.fArr[1]*3/8+'px'
-                }else if (this.fArr[0]<=1080 || this.fArr[1]<=1920){
-                    this.$refs.test.style.width = this.fArr[0]/4+'px';
-                    this.$refs.test.style.height = this.fArr[1]/4+'px'
-                }
+                this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
+                this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                // if (this.fArr[0]<=360 || this.fArr[1]<=640){
+                //     this.$refs.test.style.width = this.fArr[0]*3/4+'px';
+                //     this.$refs.test.style.height = this.fArr[1]*3/4+'px'
+                // }else if (this.fArr[0]<=768 || this.fArr[1]<=1280) {
+                //     this.$refs.test.style.width = this.fArr[0]*3/8+'px';
+                //     this.$refs.test.style.height = this.fArr[1]*3/8+'px'
+                // }else if (this.fArr[0]<=1080 || this.fArr[1]<=1920){
+                //     this.$refs.test.style.width = this.fArr[0]/4+'px';
+                //     this.$refs.test.style.height = this.fArr[1]/4+'px'
+                // }
             },
             //点击组件
             onclick(index){
@@ -459,7 +474,7 @@
             //删除按钮
             onDel(){
                 var idx = sessionStorage.getItem('Idx');
-                if (idx || this.dragArr[idx]){
+                if (idx && this.dragArr[idx]){
                     if (this.dragArr[idx].text == 'video'){
                         this.flagVideo = true
                     }
@@ -512,7 +527,11 @@
             },
             //保存
             onSave(){
-                this.dragArrs = JSON.parse(JSON.stringify(this.dragArr));
+                //编辑时显示的模板宽高
+                this.realResolution = this.$refs.test.offsetWidth+'x'+this.$refs.test.offsetHeight
+                console.log(this.realResolution);
+                localStorage.setItem('realResolution',this.realResolution)//存到缓存，以便添加任务时调用
+                this.dragArrs = JSON.parse(JSON.stringify(this.dragArr));//复制模板控件集合
                 for (let j = 0; j <this.dragArrs.length ; j++) {
                     this.dragArrs[j].locationX = this.dragArrs[j].x
                     this.dragArrs[j].locationY = this.dragArrs[j].y
@@ -536,7 +555,8 @@
                         this.params.viewListString = JSON.stringify(this.params.viewListString)
                         if (this.edITFlag == true){
                             this.params.templateId = this.templateId
-                            editTemplateAjax(this.params).then(res=>{//修改模板
+                            //修改模板
+                            editTemplateAjax(this.params).then(res=>{
                                 if (res.code == 0){
                                     this.$message.success(res.message)
                                     this.dialogVisible = false
@@ -547,7 +567,8 @@
                                 }
                             })
                         }else{
-                            addTemplateAjax(this.params).then(res=>{//添加模板
+                            //添加模板
+                            addTemplateAjax(this.params).then(res=>{
                                 if (res.code == 0){
                                     this.$message.success(res.message)
                                     this.dialogVisible = false
@@ -564,9 +585,6 @@
                     }
                     document.getElementById('img').style.display='block'
                 })
-
-                // console.log(this.params)
-
             },
             //页面信息赋值给dragArr组件
             Assignment(index){
@@ -611,7 +629,6 @@
         border: 1px solid darkgray;
         display: flex;
         align-items: center;
-        margin-top: 20px;
         margin-bottom: 20px;
         float: left;
     }
@@ -626,7 +643,6 @@
     .box-card{
         width: 220px;
         height: 200px;
-        float: left;
         margin-left: 20px;
         margin-top: 20px;
     }
@@ -639,5 +655,25 @@
         width: 160px;
         /*height: 90px;*/
         display: none;
+    }
+    .box-card-left{
+        width: 200px;
+        height: 600px;
+        margin-right: 20px;
+        float: left;
+    }
+    .topBtn{
+        margin-bottom: 20px;
+    }
+    .el-dialog-tem{
+        margin-left: -35%;
+    }
+    .tem-info{
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+    .save{
+        margin-left: 20px;
+        margin-top: 20px;
     }
 </style>

@@ -228,7 +228,7 @@
                     let key = f.name
                     let config = {
                         useCdnDomain: true, // 表示是否为CDN加速，true加速；false不加速
-                        region: qiniu.region.z2, // 当前地区， 华南区域
+                        region: qiniu.region.z2, // 当前地区，华南区域
                         domain: "http://resource.jzit168.com" // 七牛云注册的空间域名
                     };
                     let putExtra = {
@@ -241,7 +241,7 @@
                     observable.subscribe({
                         next: resProgress => {this.percent=parseInt(resProgress.total.percent)}, // 查看上传进度条
                         error: errResult => {this.$message.warning(errResult)}, // 上传失败
-                        complete: res => {
+                        complete: res => {//上传成功
                             this.src = "http://resource.jzit168.com/" + res.key;
                             if (this.activeName=='first') {
                                 this.infoResourcesListString.push({resourceName:this.src,resourceType:'图片',fileName:f.name})
