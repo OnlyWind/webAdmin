@@ -10,7 +10,7 @@
             <el-table-column prop="programInfo.programName" label="节目名称"></el-table-column>
             <el-table-column prop="taskLevel" label="任务类型">
                 <template scope="scope">
-                    {{scope.row.taskLevel==2?'插播':'常规'}}
+                    {{scope.row.taskLevel==2?'插播':'常规' }}
                 </template>
             </el-table-column>
             <el-table-column prop="addTime" label="发布时间"></el-table-column>
