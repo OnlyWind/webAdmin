@@ -8,6 +8,11 @@
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="taskName" label="任务名称"></el-table-column>
             <el-table-column prop="programInfo.programName" label="节目名称"></el-table-column>
+            <el-table-column prop="taskLevel" label="任务类型">
+                <template scope="scope">
+                    {{scope.row.taskLevel==2?'插播':'常规'}}
+                </template>
+            </el-table-column>
             <el-table-column prop="addTime" label="发布时间"></el-table-column>
             <el-table-column prop="runTime" label="播放时间"></el-table-column>
         </el-table>
