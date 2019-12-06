@@ -51,8 +51,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="选择节目">
-                    <el-select placeholder="节目名称" v-model="form.programId"  style="width:220px;">
-                        <el-option v-for="item in programNameList" :label="item.name" :value="item.id"></el-option>
+                    <el-select placeholder="节目名称" v-model="form.programId" @change="changeProgram" style="width:220px;">
+                        <el-option v-for="item in programNameList"  :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -111,7 +111,8 @@
                     for (let i = 0; i <res.data.programInfo.length ; i++) {
                         this.programNameList.push({
                             name:res.data.programInfo[i].programName,
-                            id:res.data.programInfo[i].programId
+                            id:res.data.programInfo[i].programId,
+                            resolution:res.data.programInfo[i].templateInfo.resolution
                         })
                     }
                 }
@@ -163,6 +164,19 @@
             addTask(){
                 this.addTaskDialogVisible = true
             },
+            //选择节目时
+            changeProgram(val){
+                console.log(val)
+                for (let i = 0; i < this.programNameList.length; i++) {
+                    if (val == this.programNameList[i].id){
+                        if ((this.programNameList[i].resolution)=='1080x1920') {
+                            this.form.realResolution = '270x480'
+                        }else if ((this.programNameList[i].resolution)=='1920x1080') {
+                            this.form.realResolution = '480x270'
+                        }
+                    }
+                }
+            },
             //推送任务
             pushTask(){
                 if (this.form.taskName == ''){
@@ -173,6 +187,8 @@
                     this.$message.error('请选择播放级别')
                 } else if (this.form.deviceIds == '') {
                     this.$message.error('请选择播放设备')
+                } else if (this.form.programId == ''){
+                    this.$message.error('请选择播放节目')
                 } else {
                     let year = this.form.date1.getFullYear()
                     let month = this.form.date1.getMonth()+1

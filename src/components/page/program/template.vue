@@ -7,6 +7,7 @@
         <el-input v-model="templateName" placeholder="请输入模板名" style="width: 220px;margin-left: 20px;"></el-input>
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button type="warning" @click="clear">重置</el-button>
+        <!--模板展示-->
         <div class="tem-box">
             <div class="img-wrap" style="width: 280px; display: inline-block;margin-top: 20px;" v-for="(item,index) in templateData">
                 <template>
@@ -16,7 +17,7 @@
                         <span style="display: block;text-align: center;font-size: 12px">{{item.resolution}}</span>
                         <span style="display: block;text-align: center;font-size: 12px">{{item.addTime}}</span>
                         <el-button @click="deleTem(item.templateId)" style="display: inline-block;" size="mini" type="danger" icon="el-icon-delete" circle>删 除</el-button>
-                        <el-button @click="editTem(item.src,item.temName,item.templateId,item.viewList)" style="display: inline-block;" size="mini" type="info" icon="el-icon-delete" circle>编 辑</el-button>
+                        <el-button @click="editTem(item.src,item.temName,item.templateId,item.viewList,item)" style="display: inline-block;" size="mini" type="info" icon="el-icon-delete" circle>编 辑</el-button>
                         <el-button @click="addProgram(item)" style="display: inline-block;" size="mini" type="info">添加节目单</el-button>
                     </div>
                 </template>
@@ -69,9 +70,9 @@
             </div>
         </el-dialog>
 
-
         <!--编辑模板-->
         <el-dialog title="编辑模板"  :visible.sync="dialogVisible" style="width: 170%;" class="el-dialog-tem">
+            <!--控件按钮-->
             <el-card class="box-card-left">
                 <div class="top">
                     <el-button type="primary" class="topBtn" @click="onVideo" style="margin-left: 10px;">添加视频</el-button>
@@ -80,8 +81,6 @@
                     <el-button type="primary" class="topBtn" @click="onTime">添加时间</el-button>
                 </div>
             </el-card>
-
-
             <!--模板编辑界面-->
             <div class="tembox">
                 <div id="test" ref="test">
@@ -99,12 +98,12 @@
                     </vue-draggable-resizable>
                 </div>
             </div>
-
+            <!--控件信息-->
             <div style="float:left;">
                 <!--选择分辨率-->
                 <div style="overflow: hidden">
                     <span style="margin-left: 20px;">选择分辨率</span>
-                    <el-select v-model="value" placeholder="请选择分辨率" style="margin-left: 20px;" @change="Resolution">
+                    <el-select v-model="value" placeholder="请选择分辨率" style="margin-left: 20px;" @change="Resolution" :disabled="edITFlag==true?true:false">
                         <el-option
                             v-for="item in temResolutionArr"
                             :label="item"
@@ -169,7 +168,7 @@
                 },
                 temResolution:'',
                 temResolutionArr:[],
-                dialogVisible:false,
+                dialogVisible:false,//控制编辑模板弹窗的显隐
                 deleteDialogVisible:false,
                 programDialogVisible:false,
                 materialDialogVisible:false,
@@ -194,12 +193,12 @@
                         label:'1080x1920'
                     },
                 ],
-                value:'',
+                value:'1080x1920',
                 fArr:[],
                 pageSize:10,
                 currentPage:1,
                 total:0,
-                k:0.3//模板缩放比例
+                k:0.25//模板缩放比例
             }
         },
         mounted(){
@@ -257,12 +256,13 @@
                 this.resourceIds = ''
                 let length = 0
                 let num = 0
-                if (this.resourceIdList.length){
+                if (this.resourceIdList.length){//判断素材集合有没有元素，有就进行下一次判断
                     for (let j = 0; j <this.resourceIdList.length ; j++) {
-                        this.resourceIds += this.resourceIdList[j]+','
+                        this.resourceIds += this.resourceIdList[j]+','//获取素材id集合的字符串
                     }
-                    if (this.infoProgramList.length) {
+                    if (this.infoProgramList.length) {//判断参数集合有没有元素
                         length = this.infoProgramList.length
+                        //第一次遍历检查有没有姓相同控件，有就覆盖相同控件和素材
                         for (let n = 0; n <length ; n++) {
                             if (this.infoProgramList[n].temviewId*1 == this.chooseTemplateId*1){
                                 num = 1
@@ -272,6 +272,7 @@
                                 }
                             }
                         }
+                        // 第二次遍历，如果没有相同控件，就添加参数到控件素材集合
                         for (let n = 0; n <length ; n++) {
                             if (this.infoProgramList[n].temviewId*1 != this.chooseTemplateId*1){
                                 if (num==0) {
@@ -283,7 +284,7 @@
                                 }
                             }
                         }
-                    } else {
+                    } else {//没有元素就添加控件素材对象
                         this.infoProgramList.push({
                             temviewId:this.chooseTemplateId,
                             resourceIds:this.resourceIds.slice(0,-1)
@@ -324,13 +325,14 @@
             },
             //获取模板列表数据
             getTemData(){
-                this.templateParams = {
+                this.templateParams = {//查询参数
                     userId:this.params.userId,
                     pageNum:this.currentPage,
                     pageSize:this.pageSize,
                     temName:this.templateName,
                     resolution:this.temResolution
                 }
+                //查询模板数据
                 queryTemplateAjax(this.templateParams).then(res=>{
                     if (res.code == 0){
                         this.total = res.data.total
@@ -358,36 +360,56 @@
                 this.deleteDialogVisible = true
             },
             //编辑模板
-            editTem(src,name,id,view){
+            editTem(src,name,id,view,item){
                 this.edITFlag = true
-                this.dialogVisible = true
+                numTem = 0
+                let str = []
+                //点击编辑把模板复现
                 for (let j = 0; j <view.length ; j++) {
                     view[j].x = view[j].locationX*1
                     view[j].y = view[j].locationY*1
+                    //把控件信息字符串转成数字
                     view[j].width = parseInt(view[j].width)
                     view[j].height = parseInt(view[j].height)
                     view[j].zIndex = parseInt(view[j].zIndex)
                     if (view[j].viewId == 1) {
                         view[j].text = 'video'
+                        str.push(view[j].viewName.slice(5)*1)
                     } else if (view[j].viewId == 2){
                         view[j].text = 'img'
+                        str.push(view[j].viewName.slice(3)*1)
                     } else if (view[j].viewId == 3){
                         view[j].text = 'text'
+                        str.push(view[j].viewName.slice(4)*1)
+                    } else if (view[j].viewId == 4) {
+                        str.push(view[j].viewName.slice(4)*1)
                     }
                 }
+                //防止编辑时控件出现重名情况
+                numTem = Math.max.apply(null,str)
+
+                this.dialogVisible = true
+                //控制模板画布大小
+                this.value = item.resolution
+                // this.fArr = this.value.split("x")
+                // setTimeout(res=>{
+                //     this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
+                //     this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                // },100)
+                //模板复现
                 this.params.temName = name
                 this.dragArr = view
                 this.templateId = id
                 this.src = src
                 this.flagVideo = true
+                //遍历控件集合查找有没有视频控件
                 for (let j = 0; j <this.dragArr.length ; j++) {
                     if (this.dragArr[j].viewId==1){
                         this.flagVideo = false
-                        console.log(11111111)
                     }
-                    console.log(this.dragArr[j].viewId)
                 }
             },
+            //执行删除模板
             deleteTem(){
                 delteTemplateAjax({templateId:this.templateId}).then(res=>{
                     if (res.code == 0){
@@ -421,7 +443,7 @@
                this.dragArr = []
             },
             //添加组件
-            onVideo(){
+            onVideo(){//添加视频控件
                 if (this.flagVideo){
                     this.flagVideo = false
                     this.dragArr.push(this.copyObj(this.module('video',1,'video1')))
@@ -429,28 +451,33 @@
                     this.$message.warning('video控件只能添加一个')
                 }
             },
-            onImg(){
+            onImg(){//添加图片控件
                 numTem++
                 this.dragArr.push(this.copyObj(this.module('img',2,'img'+numTem)))
             },
-            onText(){
+            onText(){//添加文字控件
                 numTem++
                 this.dragArr.push(this.copyObj(this.module('text',3,'text'+numTem)))
             },
-            onTime(){
+            onTime(){//添加时间控件
                 numTem++
                 this.dragArr.push(this.copyObj(this.module('time',4,'time'+numTem)))
             },
             //选择分辨率
             Resolution(){
                 sessionStorage.removeItem('Idx')
-                this.flagVideo = true;
-                this.$message.warning("修改分辨率会清空屏幕！")
-                //在选择分辨率的时候重置控件数组
-                this.dragArr = []
-                this.fArr = this.value.split("x")
-                this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
-                this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                //在添加模板时选择分辨率的时候重置控件数组
+                if (this.edITFlag==false){
+                    this.$message.warning("修改分辨率会清空屏幕！")
+                    this.dragArr = []
+                    this.flagVideo = true;
+
+                    console.log('pass')
+                    this.params.resolution = this.value //获取选择的分辨率
+                    this.fArr = this.value.split("x")
+                    this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
+                    this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                }
                 // if (this.fArr[0]<=360 || this.fArr[1]<=640){
                 //     this.$refs.test.style.width = this.fArr[0]*3/4+'px';
                 //     this.$refs.test.style.height = this.fArr[1]*3/4+'px'
@@ -529,12 +556,12 @@
             onSave(){
                 //编辑时显示的模板宽高
                 this.realResolution = this.$refs.test.offsetWidth+'x'+this.$refs.test.offsetHeight
-                console.log(this.realResolution);
                 localStorage.setItem('realResolution',this.realResolution)//存到缓存，以便添加任务时调用
                 this.dragArrs = JSON.parse(JSON.stringify(this.dragArr));//复制模板控件集合
                 for (let j = 0; j <this.dragArrs.length ; j++) {
                     this.dragArrs[j].locationX = this.dragArrs[j].x
                     this.dragArrs[j].locationY = this.dragArrs[j].y
+                    //删除多余属性
                     delete this.dragArrs[j].x
                     delete this.dragArrs[j].y
                     delete this.dragArrs[j].text
@@ -547,17 +574,19 @@
                     backgroundColor: null, // 解决生成的图片有白边
                     useCORS: true // 如果截图的内容里有图片,解决文件跨域问题
                 }
+                //生成缩略图的方法
                 html2canvas(this.$refs.test,opts).then((canvas)=>{
                     var url = canvas.toDataURL('image/png')
                     this.src = url
                     this.params.src = url
                     if (this.params.temName){
                         this.params.viewListString = JSON.stringify(this.params.viewListString)
-                        if (this.edITFlag == true){
+                        if (this.edITFlag == true){//this.edITFlag为true是修改模板,false是编辑模板
                             this.params.templateId = this.templateId
                             //修改模板
                             editTemplateAjax(this.params).then(res=>{
                                 if (res.code == 0){
+                                    console.log(this.params)
                                     this.$message.success(res.message)
                                     this.dialogVisible = false
                                     this.edITFlag = false
@@ -583,7 +612,7 @@
                     } else {
                         this.$message.error('请输入模板名！')
                     }
-                    document.getElementById('img').style.display='block'
+                    // document.getElementById('img').style.display='block'
                 })
             },
             //页面信息赋值给dragArr组件

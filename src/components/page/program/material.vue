@@ -119,7 +119,9 @@
                 total:0,
                 pageSize:10,
                 pageNum:1,
-                fileName:''
+                fileName:'',
+                mimeType:['image/jpeg',"image/png"],
+                warning:'请上传jpg,jpeg,png,gif格式的图片'
             }
         },
         mounted(){
@@ -149,7 +151,7 @@
                 this.getMaterialData()
             },
 
-            /*分页*/
+            //分页
             handleCurrentChange(val){
                 this.currentPage = val
                 this.getMaterialData()
@@ -164,7 +166,15 @@
             },
 
             handleClick(tab, event){
-                // console.log(this.activeName)
+                this.percent = 0
+                //点击不同的添加素材导航页来规定不同的上传类型素材类型
+                if (tab.name=='first'){
+                    this.mimeType=['image/jpeg',"image/png","image/gif"]
+                    this.warning = '请上传jpg，jpeg，png格式的图片'
+                }else if (tab.name=='second') {
+                    this.mimeType=['video/mp4','video/3gp','video/avi','video/mkv']
+                    this.warning = '请上传正确格式的视频'
+                }
             },
             //素材首页导航点击事件
             headClick(tab, event){
@@ -234,13 +244,13 @@
                     let putExtra = {
                         fname: f.name, // 文件原文件名
                         params: {}, // 放置自定义变量
-                        mimeType: null // 上传文件限制，null为不限制；限制类型放在数组中['image/png',"image/gif"]
+                        mimeType:this.mimeType // 上传文件限制，null为不限制；限制类型放在数组中['image/png',"image/gif"]
                     };
-
+                    let that = this
                     let observable = qiniu.upload(f, key, this.Token, putExtra, config);  // this.Token 为上面向后台请求token 保存字段
                     observable.subscribe({
                         next: resProgress => {this.percent=parseInt(resProgress.total.percent)}, // 查看上传进度条
-                        error: errResult => {this.$message.warning(errResult)}, // 上传失败
+                        error: errResult => {this.$message.error(that.warning)}, // 上传失败
                         complete: res => {//上传成功
                             this.src = "http://resource.jzit168.com/" + res.key;
                             if (this.activeName=='first') {
@@ -291,5 +301,4 @@
 </script>
 
 <style scoped>
-
 </style>

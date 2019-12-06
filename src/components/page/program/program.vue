@@ -68,20 +68,28 @@
                 <el-button type="primary" @click="sendUpdata">修改节目单</el-button>
             </div>
         </el-dialog>
+        <!--确认删除弹窗-->
+        <el-dialog title="提示" :visible.sync="deleDialogVisible" style="width: 50%;margin: 0 auto;">
+            <span>确认删除这个节目吗</span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="deleDialogVisible = false">确 认</el-button>
+                <el-button type="primary" @click="configDele">选 择</el-button>
+            </div>
+        </el-dialog>
 
         <!--选择素材弹窗-->
         <el-dialog title="选择素材" :visible.sync="materialDialogVisible" style="width: 100%;margin: 0 auto;">
-            <el-table :data="resourcesList" border @selection-change="handleSelectionChange"> style="width: 800px;margin-top: 20px;" ref="multipleTable">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="fileName" label="文件名"></el-table-column>
-                <el-table-column prop="resourceType" label="类型"></el-table-column>
-                <el-table-column prop="resourceName" label="地址(或文字内容)"></el-table-column>
-            </el-table>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="materialDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="choose">选 择</el-button>
-            </div>
-        </el-dialog>
+        <el-table :data="resourcesList" border @selection-change="handleSelectionChange"> style="width: 800px;margin-top: 20px;" ref="multipleTable">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="fileName" label="文件名"></el-table-column>
+            <el-table-column prop="resourceType" label="类型"></el-table-column>
+            <el-table-column prop="resourceName" label="地址(或文字内容)"></el-table-column>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="materialDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="choose">选 择</el-button>
+        </div>
+    </el-dialog>
 
         <!--发布任务弹窗-->
         <el-dialog title="发布任务" :visible.sync="addTaskDialogVisible" style="width: 100%;margin: 0 auto;">
@@ -143,9 +151,10 @@
     export default {
         data(){
             return{
-                deviceNameList:[],
+                deleProgramId:0,
+                deviceNameList:[],//设备集合
                 disabled:true,
-                form:{
+                form:{ //发布节目的参数
                     date1:null,
                     date2:null,
                     taskName:'',
@@ -177,10 +186,11 @@
                 editDialogVisible:false,
                 programDialogVisible:false,
                 materialDialogVisible:false,
+                deleDialogVisible:false,
                 dialogVisible:false,
                 tableData:[],
                 total:0,
-                searchText:'',
+                searchText:'',//搜索的节目名
                 userId:localStorage.getItem('userId'),
                 currentPage:1,
                 pageSize: 10
@@ -210,10 +220,14 @@
             },
             //改变设备
             changeDevice(val){
-                console.log(val)
             },
             //推送任务
             pushTask(row){
+                if (row.templateInfo.resolution == '1080x1920'){
+                    this.form.realResolution = '270x480'
+                } else if (row.templateInfo.resolution == '1920x1080') {
+                    this.form.realResolution = '480x270'
+                }
                 this.form.programId = row.programId
                 this.addTaskDialogVisible = true
             },
@@ -227,7 +241,9 @@
                     this.$message.error('请选择播放级别')
                 } else if (this.form.deviceIds == '') {
                     this.$message.error('请选择播放设备')
-                } else {
+                } else if (this.form.programId == ''){
+                    this.$message.error('请选择播放节目')
+                }  else {
                     let year = this.form.date1.getFullYear()
                     let month = this.form.date1.getMonth()+1
                     let date = this.form.date1.getDate()
@@ -469,10 +485,15 @@
             },
             //删除节目
             handleDelete(res){
-                let programId = res.programId
-                delProgramAjax({programId}).then(res=>{
+                this.deleProgramId = res.programId
+                this.deleDialogVisible = true
+            },
+            //执行删除节目
+            configDele(){
+                delProgramAjax({programId:this.deleProgramId}).then(res=>{
                     if (res.code==0){
                         this.$message.success(res.message)
+                        this.deleDialogVisible = false
                         this.getTableData()
                     } else {
                         this.$message.error(res.message)
