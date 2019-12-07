@@ -4,25 +4,6 @@
     </div>
 </template>
 <script>
-    // if (this.resourceIdList.length){
-    //     for (let j = 0; j <this.resourceIdList.length ; j++) {
-    //         this.infoProgramList.push({
-    //             temviewId:this.chooseTemplateId,
-    //             resourceIds:this.resourceIdList[j]
-    //         })
-    //         this.infoProgramListString.push({
-    //             resourceIds:this.resourceIdList[j],
-    //             programListId:this.programListId
-    //         })
-    //     }
-    //     this.resourceIdList = []
-    //     this.materialDialogVisible = false
-    //     this.$message.success('选择成功！')
-    //     console.log(this.infoProgramList)
-    //     console.log(this.infoProgramListString)
-    // } else {
-    //     this.$message.error('请选择素材')
-    // }
 </script>
 <style>
     @import "../static/css/main.css";
@@ -32,7 +13,21 @@
     .el-table__body-wrapper{
         overflow-y: hidden !important;
     }
+    .el-dialog__wrapper::-webkit-scrollbar {
+        display: none;
+    }
     .el-button [class*=el-icon-]+span{
         margin-left: 0;
+    }
+    .el-dialog {
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 50%;
+        overflow: auto;
+        overflow-y:hidden !important;
     }
 </style>

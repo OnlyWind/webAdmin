@@ -5,7 +5,12 @@
         <el-button type="primary" @click="search" style="margin-left: 10px;">搜 索</el-button>
         <el-button type="warning" @click="reset">重 置</el-button>
         <!--节目列表-->
-        <el-table :data="tableData" border style="width: 100%;margin-top: 30px;" ref="multipleTable">
+        <el-table stripe :data="tableData" border style="width: 100%;margin-top: 30px;" ref="multipleTable"
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+        >
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="templateInfo.temName" label="模板名"></el-table-column>
             <el-table-column prop="programName" label="节目单"></el-table-column>
@@ -32,7 +37,7 @@
             <span style="margin-left: 20px;">节目单名：</span>
             <el-input style="width: 220px;" placeholder="输入节目单名" v-model="programName"></el-input>
 
-            <el-table :data="programView.viewList" border style="width: 800px;margin-top: 20px;" ref="multipleTable">
+            <el-table stripe :data="programView.viewList" border style="width: 800px;margin-top: 20px;" ref="multipleTable">
                 <el-table-column type="index" label=" " width="55"></el-table-column>
                 <el-table-column prop="viewName" label="控件名"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -53,7 +58,7 @@
             <el-input style="width: 220px;" placeholder="输入节目单名" v-model="editProgramName"></el-input>
             <el-button type="primary" @click="editProgName">修改节目单名</el-button>
 
-            <el-table :data="updateList" border style="width: 800px;margin-top: 20px;" ref="multipleTable">
+            <el-table stripe :data="updateList" border style="width: 800px;margin-top: 20px;" ref="multipleTable">
                 <el-table-column type="index" label=" " width="55"></el-table-column>
                 <el-table-column prop="infoTemplateViewInfo.viewName" label="控件名"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -79,7 +84,7 @@
 
         <!--选择素材弹窗-->
         <el-dialog title="选择素材" :visible.sync="materialDialogVisible" style="width: 100%;margin: 0 auto;">
-        <el-table :data="resourcesList" border @selection-change="handleSelectionChange"> style="width: 800px;margin-top: 20px;" ref="multipleTable">
+        <el-table stripe :data="resourcesList" border @selection-change="handleSelectionChange"> style="width: 800px;margin-top: 20px;" ref="multipleTable">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="fileName" label="文件名"></el-table-column>
             <el-table-column prop="resourceType" label="类型"></el-table-column>

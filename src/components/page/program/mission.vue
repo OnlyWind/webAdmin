@@ -4,7 +4,12 @@
         <el-input v-model="taskSearch" placeholder="输入任务名搜索" style="width: 220px;margin-left: 20px;"></el-input>
         <el-button type="primary" @click="searchTask">搜 索</el-button>
         <el-button type="warning"style="margin-left: 20px;" @click="resetTask">重 置</el-button>
-        <el-table :data="tableData" border style="width:100%;margin-top: 20px;" ref="multipleTable">
+        <el-table :data="tableData" border style="width:100%;margin-top: 20px;" ref="multipleTable" stripe
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+        >
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="taskName" label="任务名称"></el-table-column>
             <el-table-column prop="programInfo.programName" label="节目名称"></el-table-column>

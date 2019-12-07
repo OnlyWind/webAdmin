@@ -4,7 +4,11 @@
             <el-button type="primary" @click="addDeviceType" style="margin-bottom: 25px;margin-right: 40%;">添加设备分类</el-button>
             <span>{{'设备分类数量:'+total}}</span>
         </div>
-        <el-table :data="tableData" border style="width:800px" ref="multipleTable">
+        <el-table :data="tableData" border style="width:800px" ref="multipleTable" stripe
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+            }">
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="deviceType" label="设备类型"></el-table-column>
             <el-table-column prop="deviceCount" label="设备数"  width="100"></el-table-column>

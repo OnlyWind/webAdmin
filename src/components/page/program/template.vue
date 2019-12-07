@@ -16,9 +16,9 @@
                         <span style="display: block;text-align: center;font-size: 12px">{{item.temName}}</span>
                         <span style="display: block;text-align: center;font-size: 12px">{{item.resolution}}</span>
                         <span style="display: block;text-align: center;font-size: 12px">{{item.addTime}}</span>
-                        <el-button @click="deleTem(item.templateId)" style="display: inline-block;" size="mini" type="danger" icon="el-icon-delete" circle>删 除</el-button>
-                        <el-button @click="editTem(item.src,item.temName,item.templateId,item.viewList,item)" style="display: inline-block;" size="mini" type="info" icon="el-icon-delete" circle>编 辑</el-button>
-                        <el-button @click="addProgram(item)" style="display: inline-block;" size="mini" type="info">添加节目单</el-button>
+                        <el-button @click="deleTem(item.templateId)" style="display: inline-block;" size="mini" type="danger" round>删除</el-button>
+                        <el-button @click="editTem(item.src,item.temName,item.templateId,item.viewList,item)" style="display: inline-block;" size="mini" type="primary" round>编辑</el-button>
+                        <el-button @click="addProgram(item)" style="display: inline-block;" size="mini" type="primary" round>添加节目单</el-button>
                     </div>
                 </template>
             </div>
@@ -31,7 +31,12 @@
         <el-dialog title="添加节目" :visible.sync="programDialogVisible" style="width: 1100px;margin: 0 auto;">
             <span>节目单名：</span>
             <el-input style="width: 220px;" placeholder="输入节目单名" v-model="programName"></el-input>
-            <el-table :data="programView.viewList" border style="width: 800px;margin-top: 20px;" ref="multipleTable">
+            <el-table stripe :data="programView.viewList" border style="width: 800px;margin-top: 20px;" ref="multipleTable"
+                      :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+            >
                 <el-table-column type="index" label=" " width="55"></el-table-column>
                 <el-table-column prop="viewName" label="控件名"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -49,7 +54,12 @@
 
         <!--选择素材-->
         <el-dialog title="选择素材" :visible.sync="materialDialogVisible" style="width: 100%;margin: 0 auto;">
-            <el-table :data="resourcesList" border @selection-change="handleSelectionChange" style="width: 800px;margin-top: 20px;" ref="multipleTable">
+            <el-table stripe :data="resourcesList" border @selection-change="handleSelectionChange" style="width: 800px;margin-top: 20px;" ref="multipleTable"
+                      :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+            >
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="fileName" label="文件名"></el-table-column>
                 <el-table-column prop="resourceType" label="类型"></el-table-column>
@@ -150,24 +160,23 @@
             return{
                 realResolution:'',//真实分辨率
                 infoProgramLists:[],
-                resourceIds:'',
-                chooseTemplateId:0,
-                resourceIdList:[],
-                resourcesList:[],
-                infoProgramList:[],
+                resourceIds:'',//素材id集合的字符串
+                chooseTemplateId:0,//选择的控件id
+                resourceIdList:[],//素材id集合
+                resourcesList:[],//素材集合
+                infoProgramList:[],//素材和控件对象的集合
                 programName:'',
                 sendTemId:0,
                 programView:{},
                 viewList:{},
                 edITFlag:false,
                 templateName:'',
-                // templateId:'',
                 templateData:[],
                 templateId:0,
                 templateParams:{
                 },
                 temResolution:'',
-                temResolutionArr:[],
+                temResolutionArr:[],//分辨率集合
                 dialogVisible:false,//控制编辑模板弹窗的显隐
                 deleteDialogVisible:false,
                 programDialogVisible:false,
@@ -207,6 +216,7 @@
         methods:{
             //添加节目
             addProgram(res){
+
                 this.infoProgramList = []
                 this.templateName = ''
                 this.programDialogVisible = true
@@ -364,50 +374,63 @@
                 this.edITFlag = true
                 numTem = 0
                 let str = []
-                //点击编辑把模板复现
-                for (let j = 0; j <view.length ; j++) {
-                    view[j].x = view[j].locationX*1
-                    view[j].y = view[j].locationY*1
-                    //把控件信息字符串转成数字
-                    view[j].width = parseInt(view[j].width)
-                    view[j].height = parseInt(view[j].height)
-                    view[j].zIndex = parseInt(view[j].zIndex)
-                    if (view[j].viewId == 1) {
-                        view[j].text = 'video'
-                        str.push(view[j].viewName.slice(5)*1)
-                    } else if (view[j].viewId == 2){
-                        view[j].text = 'img'
-                        str.push(view[j].viewName.slice(3)*1)
-                    } else if (view[j].viewId == 3){
-                        view[j].text = 'text'
-                        str.push(view[j].viewName.slice(4)*1)
-                    } else if (view[j].viewId == 4) {
-                        str.push(view[j].viewName.slice(4)*1)
+                queryTemplateAjax({
+                    userId:localStorage.getItem('userId'),
+                    pageSize:1,
+                    pageNum:1,
+                    temName:item.temName}).then(res=>{
+                    view = res.data.templateList[0].viewList
+                    //点击编辑把模板复现
+                    for (let j = 0; j <view.length ; j++) {
+                        view[j].x = view[j].locationX*1
+                        view[j].y = view[j].locationY*1
+                        //把控件信息字符串转成数字
+                        view[j].width = parseInt(view[j].width)
+                        view[j].height = parseInt(view[j].height)
+                        view[j].zIndex = parseInt(view[j].zIndex)
+                        //区别控件类型
+                        if (view[j].viewId == 1) {
+                            view[j].text = 'video'
+                            str.push(view[j].viewName.slice(5)*1)
+                        } else if (view[j].viewId == 2){
+                            view[j].text = 'img'
+                            str.push(view[j].viewName.slice(3)*1)
+                        } else if (view[j].viewId == 3){
+                            view[j].text = 'text'
+                            str.push(view[j].viewName.slice(4)*1)
+                        } else if (view[j].viewId == 4) {
+                            view[j].text = 'time'
+                            str.push(view[j].viewName.slice(4)*1)
+                        }
                     }
-                }
-                //防止编辑时控件出现重名情况
-                numTem = Math.max.apply(null,str)
+                    //防止编辑时控件出现重名情况
+                    numTem = Math.max.apply(null,str)
+                    this.dialogVisible = true
+                    //控制模板画布大小
+                    this.value = item.resolution
+                    this.fArr = this.value.split("x")
+                    console.log(this.templateData)
+                    setTimeout(res=>{
+                        this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
+                        this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                    },0)
 
-                this.dialogVisible = true
-                //控制模板画布大小
-                this.value = item.resolution
-                // this.fArr = this.value.split("x")
-                // setTimeout(res=>{
-                //     this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
-                //     this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
-                // },100)
-                //模板复现
-                this.params.temName = name
-                this.dragArr = view
-                this.templateId = id
-                this.src = src
-                this.flagVideo = true
-                //遍历控件集合查找有没有视频控件
-                for (let j = 0; j <this.dragArr.length ; j++) {
-                    if (this.dragArr[j].viewId==1){
-                        this.flagVideo = false
-                    }
-                }
+                    //模板复现
+                    this.params.temName = name
+                    this.params.resolution = this.value
+                    setTimeout(res=>{
+                        this.dragArr = view
+                        this.flagVideo = true
+                        //遍历控件集合查找有没有视频控件,只能添加一个视频控件
+                        for (let j = 0; j <this.dragArr.length ; j++) {
+                            if (this.dragArr[j].viewId==1){
+                                this.flagVideo = false
+                            }
+                        }
+                    },0)
+                    this.templateId = id
+                    this.src = src
+                })
             },
             //执行删除模板
             deleteTem(){
@@ -435,6 +458,7 @@
             //打开添加模板弹窗
             onaddTem(){
                numTem=0
+               this.value = '1080x1920'
                this.flagVideo = true
                this.dialogVisible = true
                this.params.src = ''
@@ -471,13 +495,13 @@
                     this.$message.warning("修改分辨率会清空屏幕！")
                     this.dragArr = []
                     this.flagVideo = true;
-
-                    console.log('pass')
                     this.params.resolution = this.value //获取选择的分辨率
                     this.fArr = this.value.split("x")
                     this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
                     this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                    console.log('pass')
                 }
+
                 // if (this.fArr[0]<=360 || this.fArr[1]<=640){
                 //     this.$refs.test.style.width = this.fArr[0]*3/4+'px';
                 //     this.$refs.test.style.height = this.fArr[1]*3/4+'px'
@@ -586,7 +610,6 @@
                             //修改模板
                             editTemplateAjax(this.params).then(res=>{
                                 if (res.code == 0){
-                                    console.log(this.params)
                                     this.$message.success(res.message)
                                     this.dialogVisible = false
                                     this.edITFlag = false

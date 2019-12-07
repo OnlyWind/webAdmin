@@ -1,6 +1,9 @@
 <template>
     <div class="sidebar">
-        <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
+        <el-menu :default-active="onRoutes" class="el-menu-vertical-demo"
+                 background-color="#324157"
+                 text-color="#bfcbd9"
+                 unique-opened router>
             <template v-for="item in itemss">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index">
@@ -20,7 +23,6 @@
 </template>
 
 <script>
-
     export default {
         data() {
             return {

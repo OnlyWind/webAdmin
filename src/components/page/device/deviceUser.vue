@@ -2,7 +2,12 @@
     <div>
         <el-button type="primary" @click="generate">生成设备账号</el-button>
         <!--设备账号列表-->
-        <el-table :data="userTable" border style="margin-top: 20px;width: 500px">
+        <el-table :data="userTable" border style="margin-top: 20px;width: 500px" stripe
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+        >
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="username" label="账号"  width="150"></el-table-column>
             <el-table-column prop="password" label="密码"  ></el-table-column>

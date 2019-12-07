@@ -51,7 +51,7 @@
                             <img :src="item.resourceName" style="width: 200px;"  class="img-box">
                             <!--<a :href="item.resourceName" download=""  >下载</a>-->
                             <span style="display: block;text-align: center;font-size: 12px">{{item.fileName}}</span>
-                            <el-button @click="deleImg(item.resourceId)" style="display: block;margin: 5px auto" size="mini" type="danger" icon="el-icon-delete" circle>删 除</el-button>
+                            <el-button @click="deleImg(item.resourceId)" style="display: block;margin: 5px auto" size="mini" type="danger" round>删除</el-button>
                         </div>
                     </template>
                 </div>
@@ -66,7 +66,7 @@
                         <div class="img-wrap2" style="display: inline-block">
                             <video :src="item.resourceName"  controls style="width: 200px"></video>
                             <span style="display: block;text-align: center;font-size: 12px">{{item.fileName}}</span>
-                            <el-button @click="deleVideo(item.resourceId)" style="display: block;margin: 5px auto" size="mini" type="danger" icon="el-icon-delete" circle>删 除</el-button>
+                            <el-button @click="deleVideo(item.resourceId)" style="display: block;margin: 5px auto" size="mini" type="danger" round>删除</el-button>
                         </div>
                     </template>
                 </div>
@@ -76,7 +76,12 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="文字" name="文字">
-                <el-table :data="materialData" border style="width: 100%" ref="multipleTable">
+                <el-table :data="materialData" border style="width: 100%" ref="multipleTable" stripe
+                          :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+                >
                     <el-table-column type="index" label=" " width="55"></el-table-column>
                     <el-table-column prop="resourceName" label="文字内容"></el-table-column>
                     <el-table-column label="操作" width="180">

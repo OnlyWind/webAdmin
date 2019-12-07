@@ -21,7 +21,12 @@
         </el-form>
 
         <!--表格数据-->
-        <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
+        <el-table :data="tableData" border style="width: 100%" ref="multipleTable" stripe
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+            }"
+        >
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="deviceName" label="设备名称"  width="150"></el-table-column>
             <el-table-column prop="deviceType" label="设备分类"  width="150"></el-table-column>
@@ -164,25 +169,25 @@
                     if (res.code==0){
                         // 正式版调用
                         this.postData.unitId = res.data.unitId
-                    }
-                })
-                //设备信息
-                deviceAjax(this.postData).then((res)=>{
-                    if (res.code=="0") {
-                        this.tableData = res.data.deviceList
-                        this.total = res.data.total
-                    }
-                })
-                //分辨率信息
-                allScreenAjax({unitId:this.postData.unitId}).then(res=>{
-                    if (res.code==0){
-                        this.allScreen =res.data
-                    }
-                })
-                //设备分类信息
-                alldeviceTypeAjax({unitId:this.postData.unitId}).then(res=>{
-                    if (res.code == 0){
-                        this.deviceTypeArr = res.data
+                        //设备信息
+                        deviceAjax(this.postData).then((res)=>{
+                            if (res.code=="0") {
+                                this.tableData = res.data.deviceList
+                                this.total = res.data.total
+                            }
+                        })
+                        //设备分类信息
+                        alldeviceTypeAjax({unitId:this.postData.unitId}).then(res=>{
+                            if (res.code == 0){
+                                this.deviceTypeArr = res.data
+                            }
+                        })
+                        //分辨率信息
+                        allScreenAjax({unitId:this.postData.unitId}).then(res=>{
+                            if (res.code==0){
+                                this.allScreen =res.data
+                            }
+                        })
                     }
                 })
             },

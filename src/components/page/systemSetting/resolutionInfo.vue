@@ -4,7 +4,12 @@
             <el-button type="primary" @click="addResolution" style="margin-bottom: 25px;margin-right: 40%;">添加分辨率</el-button>
             <span>{{'分辨率数量:'+total}}</span>
         </div>
-        <el-table :data="tableData" border style="width: 800px" ref="multipleTable">
+        <el-table stripe :data="tableData" border style="width: 800px" ref="multipleTable"
+                  :header-cell-style="{
+                    'background-color': '#fafafa',
+                    'color': 'black'
+                    }"
+        >
             <el-table-column type="index" label=" " width="55"></el-table-column>
             <el-table-column prop="resolution" label="分辨率"></el-table-column>
             <el-table-column prop="devicesAmount" label="设备数"  width="100"></el-table-column>

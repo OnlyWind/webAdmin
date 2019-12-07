@@ -4,7 +4,8 @@ import router from './router';
 import axios from 'axios';
 import qs from 'qs'
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-default/index.css';    // 默认主题
+import "element-ui/lib/theme-chalk/index.css"
+// import 'element-ui/lib/theme-default/index.css';    // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 
 import "babel-polyfill";
@@ -22,6 +23,7 @@ new Vue({
     render: h => h(App)
 }).$mount('#app');
 
+//路由守卫
 router.beforeEach((to,from,next)=>{
    let access_token = localStorage.getItem('access_token');
    if (access_token){

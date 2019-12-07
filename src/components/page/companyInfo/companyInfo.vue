@@ -93,6 +93,8 @@
                         this.form.diqu = res.data.province+res.data.city+res.data.area
                         this.form.address = res.data.address
                         localStorage.setItem("unitId",res.data.unitId)
+                    }else {
+                        this.$message.error(res.message)
                     }
                 })
             },
