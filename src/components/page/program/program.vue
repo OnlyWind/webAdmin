@@ -249,11 +249,11 @@
                 } else if (this.form.programId == ''){
                     this.$message.error('请选择播放节目')
                 }  else {
-                    let year = this.form.date1.getFullYear()
-                    let month = this.form.date1.getMonth()+1
-                    let date = this.form.date1.getDate()
+                    let year = this.form.date1.slice(0,4)
+                    let month = this.form.date2.getMonth()+1
+                    let date = this.form.date2.getDate()
                     let time = this.form.date2.toString().slice(15,24)
-                    this.form.runTime = year+'/'+month+'/'+date+time
+                    this.form.runTime = year+'/'+month+'/'+date+time //获取正确时间格式
                     delete  this.form.date1
                     delete  this.form.date2
                     console.log(this.form)
