@@ -176,7 +176,6 @@
             },
             //选择节目时
             changeProgram(val){
-                console.log(val)
                 for (let i = 0; i < this.programNameList.length; i++) {
                     if (val == this.programNameList[i].id){
                         if ((this.programNameList[i].resolution)=='1080x1920') {
@@ -200,11 +199,12 @@
                 } else if (this.form.programId == ''){
                     this.$message.error('请选择播放节目')
                 } else {
-                    let year = this.form.date1.getFullYear()
-                    let month = this.form.date1.getMonth()+1
-                    let date = this.form.date1.getDate()
+                    let year = this.form.date1.slice(0,4)
+                    let month = this.form.date2.getMonth()+1
+                    let date = this.form.date2.getDate()
                     let time = this.form.date2.toString().slice(15,24)
                     this.form.runTime = year+'/'+month+'/'+date+time //获取正确时间格式
+                    console.log(this.form.runTime)
                     let params = JSON.parse(JSON.stringify(this.form))
                     delete  params.date1 //删除多余属性
                     delete  params.date2 //删除多余属性
@@ -212,8 +212,9 @@
                     addTaskAjax(params).then(res=>{
                         if (res.code==0){
                             this.form.taskName = '',
-                                this.$message.success(res.message)
+                            this.$message.success(res.message)
                             this.addTaskDialogVisible = false
+                            this.getTask()
                         } else {
                             this.$message.error(res.message)
                         }
