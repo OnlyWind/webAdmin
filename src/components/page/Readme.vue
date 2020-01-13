@@ -8,29 +8,27 @@
         <div class="ms-doc">
             <h3>首页</h3>
             <article>
-                <h1>后台管理系统</h1>
-                <p>基于Vue.js 2.x系列 + Element UI 的后台管理系统</p>
+                <h1>信发系统使用说明</h1>
                 <h2>前言</h2>
-                <p>主要分类：信发系统、鹰智荟后台、长鹿家园后台</p>
-                <h2>功能</h2>
-                <el-checkbox disabled checked>Element UI</el-checkbox>
+                <p>信发系统是一个可以添加修改模板的后台网站，你可以编辑和发布自己的节目任务</p>
+                <p>主要功能：添加编辑模板、添加素材、添加编辑节目、发布编辑任务、版本升级</p>
+                <h2>使用过程</h2>
+                <el-checkbox disabled checked>新用户先绑定企业，一个账号只能绑定一个企业</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>登录/注销</el-checkbox>
+                <el-checkbox disabled checked>绑定企业后，根据企业绑定的设备，你可以修改设备信息，分辨率等</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>模板编辑</el-checkbox>
+                <el-checkbox disabled checked>绑定企业后，可以进行节目管理（模板管理、素材管理、节目管理、任务管理、附加任务、二维码）</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>添加节目</el-checkbox>
+                <el-checkbox disabled checked>模板管理：添加模板，可以自定义各种图片，视频，文字控件，也可以编辑模板的内容</el-checkbox>
                 <br>
-                <el-checkbox disabled checked>推送任务</el-checkbox>
+                <el-checkbox disabled checked>素材管理：可添加图片、视频、文字素材，可删除素材</el-checkbox>
                 <br>
-                <!--<el-checkbox disabled checked>富文本编辑器</el-checkbox>-->
-                <!--<br>-->
-                <el-checkbox disabled checked>信息发布系统</el-checkbox>
-                <!--<br>-->
-                <!--<el-checkbox disabled checked>鹰智荟后台</el-checkbox>-->
-                <!--<br>-->
-                <!--<el-checkbox disabled checked>长鹿家园后台</el-checkbox>-->
-                <!--<br>-->
+                <el-checkbox disabled checked>节目管理：可编辑节目，可以发布任务</el-checkbox>
+                <br>
+                <el-checkbox disabled checked>任务管理：可直接发布任务，可查看发布的任务信息</el-checkbox>
+                <br>
+                <el-checkbox disabled checked>附加任务、二维码：红外任务的添加、二维码的更换</el-checkbox>
+                <br>
             </article>
         </div>
 

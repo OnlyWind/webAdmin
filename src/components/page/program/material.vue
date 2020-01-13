@@ -31,12 +31,6 @@
                 <el-table-column prop="fileName" label="文件名"  width="200"></el-table-column>
                 <el-table-column prop="resourceType" label="文件类型"  width="100"></el-table-column>
                 <el-table-column prop="resourceName" label="地址(或文字内容)"></el-table-column>
-                <!--<el-table-column label="操作" width="180">-->
-                    <!--<template scope="scope">-->
-                        <!--<el-button size="small" type="danger"-->
-                                   <!--@click="handleDelete(scope.row)">删除</el-button>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
             </el-table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancel">取 消</el-button>
@@ -270,18 +264,21 @@
             onadd(){
                 this.dialogVisible = true
             },
-            closeDialog(){//关闭添加素材窗口前事件
+            //关闭添加素材窗口前事件
+            closeDialog(){
                 this.infoResourcesListString=[] //关闭弹窗直接清空数组
                 this.percent = 0
                 this.dialogVisible = false
                 this.text = ''
             },
-            cancel(){//取消按钮
+            //取消按钮
+            cancel(){
                 this.dialogVisible = false
                 this.infoResourcesListString=[] //取消直接清空数组
                 this.percent = 0
             },
-            onclick(){//提交素材到后端服务器
+            //提交素材到后端服务器
+            onclick(){
                 if (this.infoResourcesListString.length){
                     addresourcesAjax({
                         userId:localStorage.getItem('userId'),

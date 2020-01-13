@@ -61,19 +61,23 @@ axios.interceptors.request.use(function (config) {
 });
 
 
-
+let flag=true //只弹出报错一次
 //登录拦截器
 axios.interceptors.response.use( (response) => {
+    flag = true
     // 对响应数据做点什么
     return response;
 }, function (error) {
     // 对响应错误做点什么
     if (error.toString().search('402') != -1) {
-        ElementUI.Message({
-            message: '登录信息已失效请重新登录',
-            type: 'error'
-        });
-        router.push({ path: '/' })
+        if (flag == true){
+            ElementUI.Message({
+                message: '登录信息已失效请重新登录',
+                type: 'error'
+            });
+            router.push({ path: '/' })
+        }
+        flag = false
     } else {
         ElementUI.Message({
             message: '服务器错误或网络延迟',

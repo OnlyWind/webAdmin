@@ -27,6 +27,10 @@ export const screenListAjax = params => {return axios.post('/info/api/system/scr
 export const addScreenAjax = params => {return axios.post('/info/api/system/addScreen',qs.stringify(params)).then(res=>res.data);};
 //删除分辨率
 export const delScreenAjax = params => {return axios.post('/info/api/system/delScreen',qs.stringify(params)).then(res=>res.data);};
+//查询版本列表
+export const queryVersionAjax = params => {return axios.post('/info/api/system/queryVersionList',qs.stringify(params)).then(res=>res.data);};
+//发布新版本
+export const newVersionAjax = params => {return axios.post('/info/api/system/releaseVersion',qs.stringify(params)).then(res=>res.data);};
 
 /**设备管理**/
 //设备列表
@@ -57,6 +61,9 @@ export const addresourcesAjax = params => { return axios.post('/info/api/resourc
 export const queryresourcesAjax = params => { return axios.post('/info/api/resources/queryresources', qs.stringify(params)).then(res => res.data); };
 //删除素材
 export const delresourcesAjax = params => { return axios.post('/info/api/resources/delresources', qs.stringify(params)).then(res => res.data); };
+//查询二维码
+export const selectQuickMarkAjax = params =>{return axios.get('/info/api/resources/selectQuickMark',{params: params}).then(res=>res.data)}
+
 
 /**模板管理**/
 //查询模板
@@ -90,10 +97,11 @@ export const addTaskAjax = params => { return axios.post('/info/api/tasks/addTas
 //推送任务(已停用)
 // export const pushTaskAjax = params => { return axios.post('/info/api/tasks/pushTask', qs.stringify(params)).then(res => res.data); };
 
-
-
-
-
+/**附加任务**/
+//附加任务列表
+export const querySubTaskAjax = params => { return axios.post('/info/api/subjoinTasks/querySubTask', qs.stringify(params)).then(res => res.data); };
+//添加附加任务
+export const addSubTaskAjax = params => { return axios.post('/info/api/subjoinTasks/addSubTask', qs.stringify(params)).then(res => res.data); };
 
 
 

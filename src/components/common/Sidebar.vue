@@ -51,6 +51,10 @@
                             {
                                 index: 'resolutionInfo',
                                 title: '分辨率管理'
+                            },
+                            {
+                                index: 'version',
+                                title: '版本管理'
                             }
                         ]
                     },
@@ -93,6 +97,14 @@
                             {
                                 index: 'mission',
                                 title: '任务管理'
+                            },
+                            {
+                                index: 'subTask',
+                                title: '附加任务'
+                            },
+                            {
+                                index:'qrcode',
+                                title:'二维码'
                             }
                         ]
                     }

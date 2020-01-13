@@ -29,6 +29,10 @@ export default new Router({
                     path:'/resolutionInfo',
                     component: resolve => require(['../components/page/systemSetting/resolutionInfo.vue'], resolve)
                 },
+                {
+                    path:'/version',
+                    component: resolve => require(['../components/page/systemSetting/version.vue'], resolve)
+                },
 
                 //设备管理
                 {
@@ -67,13 +71,18 @@ export default new Router({
                     path: '/template',
                     component: resolve => require(['../components/page/program/template.vue'], resolve)
                 },
+                {
+                    path: '/subTask',
+                    component: resolve => require(['../components/page/program/subTask.vue'], resolve)
+                },
+
+                //二维码
+                {
+                    path: '/qrcode',
+                    component: resolve => require(['../components/page/program/qrcode.vue'], resolve)
+                },
 
 
-
-                // {
-                //     path: '/vueeditor',
-                //     component: resolve => require(['../components/page/VueEditor.vue'], resolve)    // Vue-Quill-Editor组件
-                // },
 
 
                 {

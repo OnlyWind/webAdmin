@@ -106,7 +106,6 @@
             },
             //获取分辨率数据
             getScreenList(){
-                console.log(this.postData)
                 screenListAjax(this.postData).then(res=>{
                     if (res.code==0){
                         this.tableData = res.data.deviceList
