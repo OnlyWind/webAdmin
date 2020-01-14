@@ -236,7 +236,7 @@
                 this.form.programId = row.programId
                 this.addTaskDialogVisible = true
             },
-            //推送任务执行
+            //执行推送任务
             sendTask(){
                 if (this.form.taskName == ''){
                     this.$message.error('请输入任务名')
@@ -256,7 +256,6 @@
                     this.form.runTime = year+'/'+month+'/'+date+time //获取正确时间格式
                     delete  this.form.date1
                     delete  this.form.date2
-                    console.log(this.form)
                     addTaskAjax(this.form).then(res=>{
                         if (res.code==0){
                             this.form.taskName = '',

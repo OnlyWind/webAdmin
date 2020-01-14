@@ -3,7 +3,7 @@
         <el-button type="primary" @click="query">更换二维码</el-button>
 
         <div style="margin-top: 30px;">
-            <el-col>
+            <el-col style="width: auto">
                 <el-card shadow="hover">
                     <img :src="src">
                 </el-card>

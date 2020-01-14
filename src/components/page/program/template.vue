@@ -153,7 +153,7 @@
 
 <script>
     import html2canvas from 'html2canvas';
-    let numTem=0
+    let numTem=0;
     import {queryTemplateAjax,addTemplateAjax,editTemplateAjax,delteTemplateAjax,allresolutionAjax,queryresourcesAjax,addProgramAjax} from "../../api/api";
     export default {
         data(){
@@ -217,36 +217,36 @@
             //添加节目
             addProgram(res){
 
-                this.infoProgramList = []
-                this.templateName = ''
-                this.programDialogVisible = true
-                this.programView = res
-                this.sendTemId = res.templateId
+                this.infoProgramList = [];
+                this.templateName = '';
+                this.programDialogVisible = true;
+                this.programView = res;
+                this.sendTemId = res.templateId;
                 for (let j = 0; j <this.programView.viewList.length ; j++) {
                     //如果有时间控件，直接添加素材id为0的节目
-                    if (this.programView.viewList[j].viewId==4) {
+                    if (this.programView.viewList[j].viewId===4) {
                         this.infoProgramList.push({"temviewId":this.programView.viewList[j].temviewId,"resourceIds":"0"})
                     }
                 }
             },
             //选择素材
             handle(row){
-                this.chooseTemplateId = row.temviewId
+                this.chooseTemplateId = row.temviewId;
                 let queryParams = {
                     userId:this.params.userId,
                     pageSize:100,
                     pageNum:1,
                     resourceType:''
-                }
-                if (row.viewId==1){
+                };
+                if (row.viewId===1){
                     queryParams.resourceType = '视频'
-                } else if (row.viewId==2){
+                } else if (row.viewId===2){
                     queryParams.resourceType = '图片'
-                } else if (row.viewId==3){
+                } else if (row.viewId===3){
                     queryParams.resourceType = '文字'
                 }
                 queryresourcesAjax(queryParams).then(res=>{//获取素材列表
-                    if (res.code==0){
+                    if (res.code===0){
                         this.resourcesList = res.data.resourcesList
                     } else {
                         this.$message.error(res.message)
@@ -256,26 +256,26 @@
             },
             //多选素材列表
             handleSelectionChange(val){
-                this.resourceIdList = []
+                this.resourceIdList = [];
                 for (let j = 0; j < val.length; j++) {
                     this.resourceIdList.push(val[j].resourceId)
                 }
             },
             //确认选择素材
             choose(){
-                this.resourceIds = ''
-                let length = 0
-                let num = 0
+                this.resourceIds = '';
+                let length = 0;
+                let num = 0;
                 if (this.resourceIdList.length){//判断素材集合有没有元素，有就进行下一次判断
                     for (let j = 0; j <this.resourceIdList.length ; j++) {
                         this.resourceIds += this.resourceIdList[j]+','//获取素材id集合的字符串
                     }
                     if (this.infoProgramList.length) {//判断参数集合有没有元素
-                        length = this.infoProgramList.length
+                        length = this.infoProgramList.length;
                         //第一次遍历检查有没有姓相同控件，有就覆盖相同控件和素材
                         for (let n = 0; n <length ; n++) {
-                            if (this.infoProgramList[n].temviewId*1 == this.chooseTemplateId*1){
-                                num = 1
+                            if (this.infoProgramList[n].temviewId*1 === this.chooseTemplateId*1){
+                                num = 1;
                                 this.infoProgramList[n] = {
                                     temviewId:this.chooseTemplateId,
                                     resourceIds:this.resourceIds.slice(0,-1)
@@ -284,9 +284,9 @@
                         }
                         // 第二次遍历，如果没有相同控件，就添加参数到控件素材集合
                         for (let n = 0; n <length ; n++) {
-                            if (this.infoProgramList[n].temviewId*1 != this.chooseTemplateId*1){
-                                if (num==0) {
-                                    num = 1
+                            if (this.infoProgramList[n].temviewId*1 !== this.chooseTemplateId*1){
+                                if (num===0) {
+                                    num = 1;
                                     this.infoProgramList.push({
                                         temviewId:this.chooseTemplateId    ,
                                         resourceIds:this.resourceIds.slice(0,-1)
@@ -302,9 +302,9 @@
                     }
 
                     // this.infoProgramList = this.infoProgramList.concat(this.infoProgramLists)
-                    this.resourceIdList = []
-                    this.materialDialogVisible = false
-                    this.$message.success('选择成功！')
+                    this.resourceIdList = [];
+                    this.materialDialogVisible = false;
+                    this.$message.success('选择成功！');
                     console.log(this.infoProgramList)
                 } else {
                     this.$message.error('请选择素材')
@@ -318,12 +318,12 @@
                         programName:this.programName,
                         templateId:this.sendTemId,
                         infoProgramListString:JSON.stringify(this.infoProgramList)
-                    }
+                    };
                     addProgramAjax(sendParams).then(res=>{
-                        if (res.code == 0){
-                            this.programName = ''
-                            this.programDialogVisible = false
-                            this.infoProgramList = []//提交成功后清空素材集合
+                        if (res.code === 0){
+                            this.programName = '';
+                            this.programDialogVisible = false;
+                            this.infoProgramList = [];//提交成功后清空素材集合
                             this.$message.success(res.message)
                         } else {
                             this.$message.error(res.message)
@@ -341,19 +341,19 @@
                     pageSize:this.pageSize,
                     temName:this.templateName,
                     resolution:this.temResolution
-                }
+                };
                 //查询模板数据
                 queryTemplateAjax(this.templateParams).then(res=>{
-                    if (res.code == 0){
-                        this.total = res.data.total
+                    if (res.code === 0){
+                        this.total = res.data.total;
                         this.templateData = res.data.templateList
                     } else {
                         this.$message.error(res.message)
                     }
-                })
+                });
                 //查询分辨率
                 allresolutionAjax({userId:this.params.userId}).then(res=>{
-                    if (res.code==0){
+                    if (res.code===0){
                         this.temResolutionArr = res.data
                     } else {
                         this.$message.error(res.message)
@@ -366,78 +366,78 @@
             },
             //删除模板
             deleTem(id){
-                this.templateId = id
+                this.templateId = id;
                 this.deleteDialogVisible = true
             },
             //编辑模板
             editTem(src,name,id,view,item){
-                this.edITFlag = true
-                numTem = 0
-                let str = []
+                this.edITFlag = true;
+                numTem = 0;
+                let str = [];
                 queryTemplateAjax({
                     userId:localStorage.getItem('userId'),
                     pageSize:1,
                     pageNum:1,
                     temName:item.temName}).then(res=>{
-                    view = res.data.templateList[0].viewList
+                    view = res.data.templateList[0].viewList;
                     //点击编辑把模板复现
                     for (let j = 0; j <view.length ; j++) {
-                        view[j].x = view[j].locationX*1
-                        view[j].y = view[j].locationY*1
+                        view[j].x = view[j].locationX*1;
+                        view[j].y = view[j].locationY*1;
                         //把控件信息字符串转成数字
-                        view[j].width = parseInt(view[j].width)
-                        view[j].height = parseInt(view[j].height)
-                        view[j].zIndex = parseInt(view[j].zIndex)
+                        view[j].width = parseInt(view[j].width);
+                        view[j].height = parseInt(view[j].height);
+                        view[j].zIndex = parseInt(view[j].zIndex);
                         //区别控件类型
-                        if (view[j].viewId == 1) {
-                            view[j].text = 'video'
+                        if (view[j].viewId === 1) {
+                            view[j].text = 'video';
                             str.push(view[j].viewName.slice(5)*1)
-                        } else if (view[j].viewId == 2){
-                            view[j].text = 'img'
+                        } else if (view[j].viewId === 2){
+                            view[j].text = 'img';
                             str.push(view[j].viewName.slice(3)*1)
-                        } else if (view[j].viewId == 3){
-                            view[j].text = 'text'
+                        } else if (view[j].viewId === 3){
+                            view[j].text = 'text';
                             str.push(view[j].viewName.slice(4)*1)
-                        } else if (view[j].viewId == 4) {
-                            view[j].text = 'time'
+                        } else if (view[j].viewId === 4) {
+                            view[j].text = 'time';
                             str.push(view[j].viewName.slice(4)*1)
                         }
                     }
                     //防止编辑时控件出现重名情况
-                    numTem = Math.max.apply(null,str)
-                    this.dialogVisible = true
+                    numTem = Math.max.apply(null,str);
+                    this.dialogVisible = true;
                     //控制模板画布大小
-                    this.value = item.resolution
-                    this.fArr = this.value.split("x")
-                    console.log(this.templateData)
+                    this.value = item.resolution;
+                    this.fArr = this.value.split("x");
+                    console.log(this.templateData);
                     setTimeout(res=>{
                         this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
                         this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
-                    },0)
+                    },0);
 
                     //模板复现
-                    this.params.temName = name
-                    this.params.resolution = this.value
+                    this.params.temName = name;
+                    this.params.resolution = this.value;
                     setTimeout(res=>{
-                        this.dragArr = view
-                        this.flagVideo = true
+                        this.dragArr = view;
+                        this.flagVideo = true;
                         //遍历控件集合查找有没有视频控件,只能添加一个视频控件
                         for (let j = 0; j <this.dragArr.length ; j++) {
-                            if (this.dragArr[j].viewId==1){
+                            if (this.dragArr[j].viewId===1){
                                 this.flagVideo = false
                             }
                         }
-                    },0)
-                    this.templateId = id
+                    },0);
+                    this.templateId = id;
                     this.src = src
                 })
             },
             //执行删除模板
             deleteTem(){
                 delteTemplateAjax({templateId:this.templateId}).then(res=>{
-                    if (res.code == 0){
-                        this.$message.success(res.message)
-                        this.getTemData()
+                    if (res.code === 0){
+                        this.$message.success(res.message);
+                        this.getTemData();
                         this.deleteDialogVisible = false
                     } else {
                         this.$message.error(res.message)
@@ -446,59 +446,59 @@
             },
             //清空搜索信息
             clear(){
-                this.temResolution = ''
-                this.templateName = ''
+                this.temResolution = '';
+                this.templateName = '';
                 this.getTemData()
             },
             //分页页数改变时
             handleCurrentChange(val){
-                this.currentPage = val
+                this.currentPage = val;
                 this.getTemData()
             },
             //打开添加模板弹窗
             onaddTem(){
-               numTem=0
-               this.value = '1080x1920'
-               this.flagVideo = true
-               this.dialogVisible = true
-               this.params.src = ''
-               this.params.temName = ''
-               this.edITFlag = false
+               numTem=0;
+               this.value = '1080x1920';
+               this.flagVideo = true;
+               this.dialogVisible = true;
+               this.params.src = '';
+               this.params.temName = '';
+               this.edITFlag = false;
                this.dragArr = []
             },
             //添加组件
             onVideo(){//添加视频控件
                 if (this.flagVideo){
-                    this.flagVideo = false
+                    this.flagVideo = false;
                     this.dragArr.push(this.copyObj(this.module('video',1,'video1')))
                 } else {
                     this.$message.warning('video控件只能添加一个')
                 }
             },
             onImg(){//添加图片控件
-                numTem++
+                numTem++;
                 this.dragArr.push(this.copyObj(this.module('img',2,'img'+numTem)))
             },
             onText(){//添加文字控件
-                numTem++
+                numTem++;
                 this.dragArr.push(this.copyObj(this.module('text',3,'text'+numTem)))
             },
             onTime(){//添加时间控件
-                numTem++
+                numTem++;
                 this.dragArr.push(this.copyObj(this.module('time',4,'time'+numTem)))
             },
             //选择分辨率
             Resolution(){
-                sessionStorage.removeItem('Idx')
+                sessionStorage.removeItem('Idx');
                 //在添加模板时选择分辨率的时候重置控件数组
-                if (this.edITFlag==false){
-                    this.$message.warning("修改分辨率会清空屏幕！")
-                    this.dragArr = []
+                if (this.edITFlag===false){
+                    this.$message.warning("修改分辨率会清空屏幕！");
+                    this.dragArr = [];
                     this.flagVideo = true;
-                    this.params.resolution = this.value //获取选择的分辨率
-                    this.fArr = this.value.split("x")
+                    this.params.resolution = this.value ;//获取选择的分辨率
+                    this.fArr = this.value.split("x");
                     this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
-                    this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
+                    this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px';
                     console.log('pass')
                 }
 
@@ -524,13 +524,13 @@
             },
             //删除按钮
             onDel(){
-                var idx = sessionStorage.getItem('Idx');
+                let idx = sessionStorage.getItem('Idx');
                 if (idx && this.dragArr[idx]){
-                    if (this.dragArr[idx].text == 'video'){
+                    if (this.dragArr[idx].text === 'video'){
                         this.flagVideo = true
                     }
-                    this.dragArr.splice(idx,1)
-                    sessionStorage.removeItem('Idx')
+                    this.dragArr.splice(idx,1);
+                    sessionStorage.removeItem('Idx');
                     this.$message.success('删除成功')
                 }else{
                     this.$message.warning('请选择组件')
@@ -549,7 +549,7 @@
             },
             //拖动时
             onDragging(x,y){
-                this.x = x
+                this.x = x;
                 this.y = y
             },
             //拖动结束
@@ -558,9 +558,9 @@
             },
             //置顶
             onTop(){
-                var idx = sessionStorage.getItem('Idx')
+                let idx = sessionStorage.getItem('Idx');
                 if (idx){
-                    for (var i = 0; i <this.dragArr.length ; i++) {
+                    for (let i = 0; i <this.dragArr.length ; i++) {
                         this.dragArr[i].zIndex = 1
                     }
                     this.dragArr[idx].zIndex = 2
@@ -568,9 +568,9 @@
             },
             //置底
             onBtm(){
-                var idx = sessionStorage.getItem('Idx')
+                let idx = sessionStorage.getItem('Idx');
                 if (idx){
-                    for (var i = 0; i <this.dragArr.length ; i++) {
+                    for (let i = 0; i <this.dragArr.length ; i++) {
                         this.dragArr[i].zIndex = 2
                     }
                     this.dragArr[idx].zIndex = 1
@@ -579,40 +579,40 @@
             //保存
             onSave(){
                 //编辑时显示的模板宽高
-                this.realResolution = this.$refs.test.offsetWidth+'x'+this.$refs.test.offsetHeight
-                localStorage.setItem('realResolution',this.realResolution)//存到缓存，以便添加任务时调用
+                this.realResolution = this.$refs.test.offsetWidth+'x'+this.$refs.test.offsetHeight;
+                localStorage.setItem('realResolution',this.realResolution);//存到缓存，以便添加任务时调用
                 this.dragArrs = JSON.parse(JSON.stringify(this.dragArr));//复制模板控件集合
                 for (let j = 0; j <this.dragArrs.length ; j++) {
-                    this.dragArrs[j].locationX = this.dragArrs[j].x
-                    this.dragArrs[j].locationY = this.dragArrs[j].y
+                    this.dragArrs[j].locationX = this.dragArrs[j].x;
+                    this.dragArrs[j].locationY = this.dragArrs[j].y;
                     //删除多余属性
-                    delete this.dragArrs[j].x
-                    delete this.dragArrs[j].y
+                    delete this.dragArrs[j].x;
+                    delete this.dragArrs[j].y;
                     delete this.dragArrs[j].text
                 }
-                this.params.viewListString = this.dragArrs
+                this.params.viewListString = this.dragArrs;
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-                var opts = {
+                let opts = {
                     logging: true, // 启用日志记录以进行调试 (发现加上对去白边有帮助)
                     allowTaint: true, // 否允许跨源图像污染画布
                     backgroundColor: null, // 解决生成的图片有白边
                     useCORS: true // 如果截图的内容里有图片,解决文件跨域问题
-                }
+                };
                 //生成缩略图的方法
                 html2canvas(this.$refs.test,opts).then((canvas)=>{
-                    var url = canvas.toDataURL('image/png')
-                    this.src = url
-                    this.params.src = url
+                    let url = canvas.toDataURL('image/png');
+                    this.src = url;
+                    this.params.src = url;
                     if (this.params.temName){
-                        this.params.viewListString = JSON.stringify(this.params.viewListString)
-                        if (this.edITFlag == true){//this.edITFlag为true是修改模板,false是编辑模板
-                            this.params.templateId = this.templateId
+                        this.params.viewListString = JSON.stringify(this.params.viewListString);
+                        if (this.edITFlag === true){//this.edITFlag为true是修改模板,false是编辑模板
+                            this.params.templateId = this.templateId;
                             //修改模板
                             editTemplateAjax(this.params).then(res=>{
-                                if (res.code == 0){
-                                    this.$message.success(res.message)
-                                    this.dialogVisible = false
-                                    this.edITFlag = false
+                                if (res.code === 0){
+                                    this.$message.success(res.message);
+                                    this.dialogVisible = false;
+                                    this.edITFlag = false;
                                     this.getTemData()
                                 } else {
                                     this.$message.error(res.message)
@@ -621,9 +621,9 @@
                         }else{
                             //添加模板
                             addTemplateAjax(this.params).then(res=>{
-                                if (res.code == 0){
-                                    this.$message.success(res.message)
-                                    this.dialogVisible = false
+                                if (res.code === 0){
+                                    this.$message.success(res.message);
+                                    this.dialogVisible = false;
                                     this.getTemData()
                                 } else {
                                     this.$message.error(res.message)
