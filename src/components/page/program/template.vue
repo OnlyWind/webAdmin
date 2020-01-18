@@ -51,7 +51,6 @@
                 <el-button type="primary" @click="sendProgram">添加节目单</el-button>
             </div>
         </el-dialog>
-
         <!--选择素材-->
         <el-dialog title="选择素材" :visible.sync="materialDialogVisible" style="width: 100%;margin: 0 auto;">
             <el-table stripe :data="resourcesList" border @selection-change="handleSelectionChange" style="width: 800px;margin-top: 20px;" ref="multipleTable"
@@ -70,7 +69,6 @@
                 <el-button type="primary" @click="choose">选 择</el-button>
             </div>
         </el-dialog>
-
         <!--删除模板提示-->
         <el-dialog title="删除模板" :visible.sync="deleteDialogVisible" style="width: 50%;margin: 0 auto;">
             <span style="display: block;">确定删除这个模板吗?</span>
@@ -79,9 +77,8 @@
                 <el-button type="primary" @click="deleteTem">确 定</el-button>
             </div>
         </el-dialog>
-
         <!--编辑模板-->
-        <el-dialog title="编辑模板"  :visible.sync="dialogVisible" style="width: 170%;" class="el-dialog-tem">
+        <el-dialog title="编辑模板" @closed="closed"  :visible.sync="dialogVisible" style="width: 170%;" class="el-dialog-tem">
             <!--控件按钮-->
             <el-card class="box-card-left">
                 <div class="top">
@@ -124,10 +121,10 @@
                 <!--控件信息-->
                 <el-card class="box-card">
                     <p>
-                        <span class="a">x:{{x}}</span>
-                        <span class="a">y:{{y}}</span>
-                        <span class="a">width:{{width}}</span>
-                        <span class="a">height:{{height}}</span>
+                        <span class="a">x:{{Math.round(x)}}</span>
+                        <span class="a">y:{{Math.round(y)}}</span>
+                        <span class="a">width:{{Math.round(width/k)}}</span>
+                        <span class="a">height:{{Math.round(height/k)}}</span>
                     </p>
 
                 </el-card>
@@ -145,8 +142,6 @@
                     <!--<img :src="src" id="img">-->
                 <!--</div>-->
             </div>
-
-
         </el-dialog>
     </div>
 </template>
@@ -156,6 +151,7 @@
     let numTem=0;
     import {queryTemplateAjax,addTemplateAjax,editTemplateAjax,delteTemplateAjax,allresolutionAjax,queryresourcesAjax,addProgramAjax} from "../../api/api";
     export default {
+        inject:['reload'],
         data(){
             return{
                 realResolution:'',//真实分辨率
@@ -196,13 +192,13 @@
                     viewListString:[]
                 },
                 src:'',
-                options:[
-                    {
-                        value:'1',
-                        label:'1080x1920'
-                    },
-                ],
-                value:'1080x1920',
+                // options:[
+                //     {
+                //         value:'1',
+                //         label:'1080x1920'
+                //     },
+                // ],
+                value:'1080x1920',//选择分辨率下拉框的值
                 fArr:[],
                 pageSize:10,
                 currentPage:1,
@@ -216,7 +212,6 @@
         methods:{
             //添加节目
             addProgram(res){
-
                 this.infoProgramList = [];
                 this.templateName = '';
                 this.programDialogVisible = true;
@@ -369,6 +364,10 @@
                 this.templateId = id;
                 this.deleteDialogVisible = true
             },
+
+            closed(){
+                this.reload()
+            },
             //编辑模板
             editTem(src,name,id,view,item){
                 this.edITFlag = true;
@@ -378,15 +377,15 @@
                     userId:localStorage.getItem('userId'),
                     pageSize:1,
                     pageNum:1,
-                    temName:item.temName}).then(res=>{
+                    templateId:id}).then(res=>{
                     view = res.data.templateList[0].viewList;
                     //点击编辑把模板复现
                     for (let j = 0; j <view.length ; j++) {
-                        view[j].x = view[j].locationX*1;
-                        view[j].y = view[j].locationY*1;
+                        view[j].x = Math.round(view[j].locationX*this.k);
+                        view[j].y = Math.round(view[j].locationY*this.k);
                         //把控件信息字符串转成数字
-                        view[j].width = parseInt(view[j].width);
-                        view[j].height = parseInt(view[j].height);
+                        view[j].width = Math.round(parseInt(view[j].width)*this.k);
+                        view[j].height = Math.round(parseInt(view[j].height)*this.k);
                         view[j].zIndex = parseInt(view[j].zIndex);
                         //区别控件类型
                         if (view[j].viewId === 1) {
@@ -409,8 +408,7 @@
                     //控制模板画布大小
                     this.value = item.resolution;
                     this.fArr = this.value.split("x");
-                    console.log(this.templateData);
-                    setTimeout(res=>{
+                    setTimeout(()=>{
                         this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
                         this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px'
                     },0);
@@ -418,7 +416,7 @@
                     //模板复现
                     this.params.temName = name;
                     this.params.resolution = this.value;
-                    setTimeout(res=>{
+                    setTimeout(()=>{
                         this.dragArr = view;
                         this.flagVideo = true;
                         //遍历控件集合查找有没有视频控件,只能添加一个视频控件
@@ -465,6 +463,14 @@
                this.params.temName = '';
                this.edITFlag = false;
                this.dragArr = []
+               this.x = 0;
+               this.y = 0;
+               this.width =0;
+               this.height =0;
+               setTimeout(()=>{
+                   this.$refs.test.style.width = 270+'px';
+                   this.$refs.test.style.height = 480+'px'
+               },0);
             },
             //添加组件
             onVideo(){//添加视频控件
@@ -499,7 +505,6 @@
                     this.fArr = this.value.split("x");
                     this.$refs.test.style.width = Math.round(this.fArr[0]*this.k)+'px';
                     this.$refs.test.style.height = Math.round(this.fArr[1]*this.k)+'px';
-                    console.log('pass')
                 }
 
                 // if (this.fArr[0]<=360 || this.fArr[1]<=640){
@@ -538,8 +543,8 @@
             },
             //放大缩小时
             onResizing(x,y,w,h){
-                this.x = x;
-                this.y = y;
+                this.x = x/this.k;
+                this.y = y/this.k;
                 this.width = w;
                 this.height = h;
             },
@@ -549,8 +554,8 @@
             },
             //拖动时
             onDragging(x,y){
-                this.x = x;
-                this.y = y
+                this.x = x/this.k;
+                this.y = y/this.k;
             },
             //拖动结束
             onDragstop(index){
@@ -583,8 +588,11 @@
                 localStorage.setItem('realResolution',this.realResolution);//存到缓存，以便添加任务时调用
                 this.dragArrs = JSON.parse(JSON.stringify(this.dragArr));//复制模板控件集合
                 for (let j = 0; j <this.dragArrs.length ; j++) {
-                    this.dragArrs[j].locationX = this.dragArrs[j].x;
-                    this.dragArrs[j].locationY = this.dragArrs[j].y;
+                    //用k值计算在分辨率下的坐标和宽高
+                    this.dragArrs[j].locationX = this.dragArrs[j].x/this.k;
+                    this.dragArrs[j].locationY = this.dragArrs[j].y/this.k;
+                    this.dragArrs[j].width = this.dragArrs[j].width/this.k;
+                    this.dragArrs[j].height = this.dragArrs[j].height/this.k;
                     //删除多余属性
                     delete this.dragArrs[j].x;
                     delete this.dragArrs[j].y;
@@ -598,6 +606,7 @@
                     backgroundColor: null, // 解决生成的图片有白边
                     useCORS: true // 如果截图的内容里有图片,解决文件跨域问题
                 };
+                console.log(this.params)
                 //生成缩略图的方法
                 html2canvas(this.$refs.test,opts).then((canvas)=>{
                     let url = canvas.toDataURL('image/png');
@@ -640,17 +649,17 @@
             },
             //页面信息赋值给dragArr组件
             Assignment(index){
-                this.dragArr[index].x = this.x;
-                this.dragArr[index].y = this.y;
-                this.dragArr[index].width = this.width;
-                this.dragArr[index].height = this.height;
+                this.dragArr[index].x =Math.round(this.x*this.k) ;
+                this.dragArr[index].y =Math.round(this.y*this.k) ;
+                this.dragArr[index].width =Math.round(this.width);
+                this.dragArr[index].height =Math.round(this.height);
             },
             //dragArr组件信息赋值给页面信息
             unAssignment(index){
-                this.x = this.dragArr[index].x;
-                this.y = this.dragArr[index].y;
-                this.width = this.dragArr[index].width;
-                this.height = this.dragArr[index].height;
+                this.x =  Math.round(this.dragArr[index].x/this.k);
+                this.y = Math.round(this.dragArr[index].y/this.k);
+                this.width = Math.round(this.dragArr[index].width);
+                this.height = Math.round(this.dragArr[index].height);
             },
             //复制对象方法
             copyObj(obj){

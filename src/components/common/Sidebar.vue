@@ -70,10 +70,6 @@
                             {
                                 index: 'deviceClass',
                                 title: '设备分类管理'
-                            },
-                            {
-                                index: 'deviceUser',
-                                title: '生成设备账号'
                             }
                         ]
                     },

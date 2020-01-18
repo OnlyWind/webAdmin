@@ -77,8 +77,8 @@
         <el-dialog title="提示" :visible.sync="deleDialogVisible" style="width: 50%;margin: 0 auto;">
             <span>确认删除这个节目吗</span>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="deleDialogVisible = false">确 认</el-button>
-                <el-button type="primary" @click="configDele">选 择</el-button>
+                <el-button @click="deleDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="configDele">确 认</el-button>
             </div>
         </el-dialog>
 
@@ -228,11 +228,11 @@
             },
             //推送任务
             pushTask(row){
-                if (row.templateInfo.resolution == '1080x1920'){
-                    this.form.realResolution = '270x480'
-                } else if (row.templateInfo.resolution == '1920x1080') {
-                    this.form.realResolution = '480x270'
-                }
+                // if (row.templateInfo.resolution == '1080x1920'){
+                //     this.form.realResolution = '270x480'
+                // } else if (row.templateInfo.resolution == '1920x1080') {
+                //     this.form.realResolution = '480x270'
+                // }
                 this.form.programId = row.programId
                 this.addTaskDialogVisible = true
             },
