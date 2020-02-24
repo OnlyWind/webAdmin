@@ -12,8 +12,8 @@
                     }"
         >
             <el-table-column type="index" label=" " width="55"></el-table-column>
-            <el-table-column prop="templateInfo.temName" label="模板名"></el-table-column>
             <el-table-column prop="programName" label="节目单"></el-table-column>
+            <el-table-column prop="templateInfo.temName" label="模板名"></el-table-column>
             <el-table-column prop="templateInfo.resolution" label="分辨率"></el-table-column>
             <el-table-column prop="addTime" label="添加时间"></el-table-column>
             <el-table-column label="操作">
@@ -102,7 +102,7 @@
                 <el-form-item label="任务名称">
                     <el-input placeholder="请输入任务名"  v-model="form.taskName" style="width: 220px;"></el-input>
                 </el-form-item>
-                <el-form-item label="活动时间">
+                <el-form-item label="播放时间">
                     <el-date-picker
                         v-model="form.date1"
                         align="right"
