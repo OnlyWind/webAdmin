@@ -95,7 +95,6 @@
             <el-button type="primary" @click="choose">选 择</el-button>
         </div>
     </el-dialog>
-
         <!--发布任务弹窗-->
         <el-dialog title="发布任务" :visible.sync="addTaskDialogVisible" style="width: 100%;margin: 0 auto;">
             <el-form ref="form" :model="form" label-width="100px">
