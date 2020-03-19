@@ -24,8 +24,8 @@
         data: function(){
             return {
                 ruleForm: {
-                    phoneNumber: 'admin1',
-                    password: '123456',
+                    phoneNumber: '',
+                    password: '',
                     type:1,
                     deviceType:2,
                     // applicationType:2
