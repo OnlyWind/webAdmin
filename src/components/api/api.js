@@ -84,6 +84,8 @@ export const queryProgramAjax = params => { return axios.post('/info/api/program
 export const addProgramAjax = params => { return axios.post('/info/api/programs/addProgram', qs.stringify(params)).then(res => res.data); };
 //编辑节目名
 export const updateProgramAjax = params => { return axios.post('/info/api/programs/updateProgram', qs.stringify(params)).then(res => res.data); };
+//审核节目
+export const reviewProgramAjax = params => { return axios.post('/info/api/programs/check', qs.stringify(params)).then(res => res.data); };
 //编辑节目单
 export const updateProgramListAjax = params => { return axios.post('/info/api/programs/updateProgramList', qs.stringify(params)).then(res => res.data); };
 //删除节目

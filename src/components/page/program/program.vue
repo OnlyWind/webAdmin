@@ -12,14 +12,20 @@
                     }"
         >
             <el-table-column type="index" label=" " width="55"></el-table-column>
-            <el-table-column prop="programName" label="节目单"></el-table-column>
-            <el-table-column prop="templateInfo.temName" label="模板名"></el-table-column>
-            <el-table-column prop="templateInfo.resolution" label="分辨率"></el-table-column>
-            <el-table-column prop="addTime" label="添加时间"></el-table-column>
+            <el-table-column prop="programName" label="节目单" width="200"></el-table-column>
+            <el-table-column prop="templateInfo.temName" label="模板名" width="200"></el-table-column>
+            <el-table-column prop="templateInfo.resolution" label="分辨率" width="110"></el-table-column>
+            <el-table-column prop="addTime" label="添加时间" width="200"></el-table-column>
+            <el-table-column prop="audit" label="审核状态" width="110">
+                <template scope="scope">
+                    {{!scope.row.audit?'审核中':scope.row.audit==0?'审核中':scope.row.audit==1?'审核通过':'审核不通过'}}
+                </template>
+            </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
                     <el-button size="small" type="primary" @click="pushTask(scope.row)">发布</el-button>
                     <el-button size="small" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button size="small" type="primary" @click="handleReview(scope.row)">审核</el-button>
                     <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -136,6 +142,23 @@
                 <el-button type="primary" @click="sendTask">发 布</el-button>
             </div>
         </el-dialog>
+        <!--审核弹窗-->
+        <el-dialog title="提示" :visible.sync="reviewDialogVisible" style="width: 50%;margin: 0 auto;">
+            <el-button type="primary" @click="review(1)">审核通过</el-button>
+            <el-button type="warning" @click="review(2)">审核不通过</el-button>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="reviewDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="reviewDialogVisible = false">确 认</el-button>
+            </div>
+        </el-dialog>
+        <!--确认审核弹窗-->
+        <el-dialog title="提示" :visible.sync="configReviewDialogVisible" style="width: 50%;margin: 0 auto;">
+            <span>{{prompt}}</span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="configReviewDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="configReview">确 认</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -149,7 +172,8 @@
         queryTemplateAjax,
         queryresourcesAjax,
         addTaskAjax,
-        deviceAjax
+        deviceAjax,
+        reviewProgramAjax
     } from "../../api/api";
 
     export default {
@@ -192,12 +216,18 @@
                 materialDialogVisible:false,
                 deleDialogVisible:false,
                 dialogVisible:false,
+                reviewDialogVisible:false,
+                configReviewDialogVisible:false,
                 tableData:[],
                 total:0,
                 searchText:'',//搜索的节目名
                 userId:localStorage.getItem('userId'),
                 currentPage:1,
-                pageSize: 10
+                pageSize: 10,
+                prompt:'',
+                programIds:0,
+                reviewType:0,
+                programNames:""
             }
         },
         mounted(){
@@ -501,6 +531,30 @@
                     } else {
                         this.$message.error(res.message)
                     }
+                })
+            },
+            //审核节目
+            handleReview(row){
+                this.reviewDialogVisible = true
+                this.programIds = row.programId
+                this.programNames = row.programName
+            },
+            //审核按钮
+            review(type){
+                this.configReviewDialogVisible = true
+                this.reviewType = type
+                if (type === 1){
+                    this.prompt = "确认审核通过吗"
+                } else if (type === 2){
+                    this.prompt = "确认审核不通过吗"
+                }
+            },
+            configReview(){
+                reviewProgramAjax({programId:this.programIds,audit:this.reviewType}).then(res=>{
+                    this.configReviewDialogVisible = false
+                    this.reviewDialogVisible = false
+                    this.getTableData()
+                    this.$message.success('审核成功')
                 })
             },
             //获取节目表格数据
