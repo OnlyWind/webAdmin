@@ -79,10 +79,18 @@ axios.interceptors.response.use( (response) => {
         }
         flag = false
     } else {
-        ElementUI.Message({
-            message: '服务器错误或网络延迟',
-            type: 'error'
-        });
+        if (!localStorage.getItem('unitId') === false || localStorage.getItem('unitId') === undefined) {
+            ElementUI.Message({
+                message: '请先绑定企业',
+                type: 'error'
+            });
+            router.push({ path: '/companyInfo' })
+        }else{
+            ElementUI.Message({
+                message: '服务器错误或网络延迟',
+                type: 'error'
+            });
+        }
     }
     return Promise.reject(error);
 });

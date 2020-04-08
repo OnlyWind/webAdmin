@@ -36,9 +36,27 @@
 </template>
 
 <script>
+    import {querycomInfoAjax} from '../api/api'
     export default {
         data: function(){
-            return {}
+            return {
+                userId:localStorage.getItem('userId')
+            }
+        },
+        mounted() {
+            this.getCompanyId()
+        },
+        methods:{
+            getCompanyId(){
+                querycomInfoAjax({userId:this.userId}).then(res=>{
+                    if (!res.data.unitId) {
+                        this.$message.error('请先绑定企业！')
+                        this.$router.push('/companyInfo')
+                    } else {
+                        localStorage.setItem('unitId',res.data.unitId)
+                    }
+                })
+            }
         }
     }
 </script>
