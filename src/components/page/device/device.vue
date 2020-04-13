@@ -197,7 +197,16 @@
             },
             //提交编辑
             onSend(){
-
+                    if(!this.openTime[0] || !this.openTime[1] || !this.openTime[2]){
+                        this.openTime[0] = '/'
+                        this.openTime[1] = '00'
+                        this.openTime[2] = '00'
+                    }
+                    if(!this.closeTime[0] || !this.closeTime[1] || !this.closeTime[2]){
+                        this.closeTime[0] = '00'
+                        this.closeTime[1] = '00'
+                        this.closeTime[2] = '00'
+                    }
                     this.form.openTime = '2019/11/21 '+ this.openTime[0]+':'+this.openTime[1]+':'+this.openTime[2]
                     this.form.closeTime = '2019/11/21 '+ this.closeTime[0]+':'+this.closeTime[1]+':'+this.closeTime[2]
                     console.log(this.form)

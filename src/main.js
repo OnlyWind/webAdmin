@@ -83,16 +83,20 @@ axios.interceptors.response.use( (response) => {
             message: '服务器错误或网络延迟',
             type: 'error'
         });
-    } else {
-        console.log(localStorage.getItem('unitId'))
+    } else if (localStorage.getItem('unitId') == false || localStorage.getItem('unitId') == undefined){
         //如果没有绑定企业，先跳转企业管理页面
-        if (!localStorage.getItem('unitId') == false || localStorage.getItem('unitId') == undefined) {
+        if (localStorage.getItem('unitId') == false || localStorage.getItem('unitId') == undefined) {
             ElementUI.Message({
                 message: '请先绑定企业',
                 type: 'error'
             });
             router.push({ path: '/companyInfo' })
         }
+    } else {
+        ElementUI.Message({
+            message: '系统错误，联系管理员',
+            type: 'error'
+        });
     }
     return Promise.reject(error);
 });
